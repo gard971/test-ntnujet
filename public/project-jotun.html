@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Project Jotun, Jet NTNU's student-designed afterburning turbojet engine." />
+    <title>Project: Jotun, Jet NTNU</title>
+    <link rel="icon" href="/assets/jet-ntnu-favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles-brayton-20260807b.css" />
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js"></script>
+  </head>
+  <body class="inner-page jotun-page">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Jet NTNU home"><img src="/assets/jet-ntnu-white-official.svg" alt="Jet NTNU" /></a>
+      <button class="menu-button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav id="site-nav" aria-label="Main navigation"><a class="active" href="/project-jotun">Project: Jotun</a><a href="/about">About Jet</a><a href="/team">Team</a><a href="/apply">Apply Now</a><a href="/partners">Partners</a></nav>
+    </header>
+
+    <main>
+      <section class="project-hero jotun-reveal">
+        <div class="reveal-copy">
+          <p class="eyebrow">First project · Student-built turbojet</p>
+          <h1>Meet <em>Jotun.</em></h1>
+          <p class="reveal-subtitle">Our first student-designed afterburning turbojet.</p>
+        </div>
+        <figure class="reveal-product">
+          <img src="/assets/jotun-nettside.png" alt="Project Jotun engine artwork" width="3062" height="1618" fetchpriority="high" />
+        </figure>
+        <div class="scroll-cue">Explore the system</div>
+      </section>
+
+      <section class="jotun-intro section-pad">
+        <div class="section-kicker">I · THE OBJECTIVE</div>
+        <div>
+          <p class="eyebrow">What is Jotun?</p>
+          <h2>A complete gas turbine.<br />From a <em>blank page.</em></h2>
+          <p class="lead-copy">Jotun is Jet NTNU’s first engine project. It is a compact turbojet with an afterburner, divided into six stations: inlet, compressor, combustor, turbine, afterburner, and nozzle. Building it brings thermodynamics, aerodynamics, structures, manufacturing, controls, and testing into one project.</p>
+        </div>
+      </section>
+
+      <section class="architecture section-pad">
+        <div class="section-heading brayton-heading"><p class="eyebrow" id="brayton-kicker">Jotun cycle data</p><h2 id="brayton-title">Brayton cycle.<br /><em>Station by station.</em></h2></div>
+        <div class="brayton-cycle" data-brayton-cycle>
+          <div class="brayton-readout" aria-live="polite">
+            <span id="brayton-station-label">Station</span><strong><span id="brayton-station">1</span></strong><span class="brayton-station-name" id="brayton-station-name">Inlet</span>
+            <dl><div><dt>T₀</dt><dd><span id="brayton-temperature-c">14.85</span> °C <small>(<span id="brayton-temperature-k">288.00</span> K)</small></dd></div><div><dt>s</dt><dd><span id="brayton-entropy">0.000</span> kJ/(kg·K)</dd></div></dl>
+          </div>
+          <div class="brayton-plot-wrap"><svg class="brayton-plot" viewBox="0 0 960 590" role="img" aria-labelledby="brayton-svg-title brayton-svg-description">
+            <title id="brayton-svg-title">Jotun temperature entropy cycle</title><desc id="brayton-svg-description">Six calculated stations connected on a temperature entropy diagram. Use the slider to move along the cycle.</desc>
+            <g class="brayton-grid" aria-hidden="true">
+              <line x1="92" y1="470.85" x2="910" y2="470.85"></line><text x="78" y="474.85" text-anchor="end">300</text>
+              <line x1="92" y1="392.54" x2="910" y2="392.54"></line><text x="78" y="396.54" text-anchor="end">500</text>
+              <line x1="92" y1="314.24" x2="910" y2="314.24"></line><text x="78" y="318.24" text-anchor="end">700</text>
+              <line x1="92" y1="235.93" x2="910" y2="235.93"></line><text x="78" y="239.93" text-anchor="end">900</text>
+              <line x1="92" y1="157.63" x2="910" y2="157.63"></line><text x="78" y="161.63" text-anchor="end">1100</text>
+              <line x1="92" y1="79.32" x2="910" y2="79.32"></line><text x="78" y="83.32" text-anchor="end">1300</text>
+              <line x1="129.18" y1="48" x2="129.18" y2="510"></line><text x="129.18" y="535" text-anchor="middle">0.0</text>
+              <line x1="315.09" y1="48" x2="315.09" y2="510"></line><text x="315.09" y="535" text-anchor="middle">0.4</text>
+              <line x1="501" y1="48" x2="501" y2="510"></line><text x="501" y="535" text-anchor="middle">0.8</text>
+              <line x1="686.91" y1="48" x2="686.91" y2="510"></line><text x="686.91" y="535" text-anchor="middle">1.2</text>
+              <line x1="872.82" y1="48" x2="872.82" y2="510"></line><text x="872.82" y="535" text-anchor="middle">1.6</text>
+            </g><g class="brayton-axis" aria-hidden="true"><line x1="92" y1="48" x2="92" y2="510"></line><line x1="92" y1="510" x2="910" y2="510"></line><text x="26" y="275" transform="rotate(-90 26 275)">T₀ [K]</text><text x="500" y="566">s [kJ/(kg·K)]</text></g>
+            <g class="brayton-segments"><line class="cycle-compressor" x1="129.18" y1="475.55" x2="179.53" y2="416.15"></line><line class="cycle-combustion" x1="179.53" y1="416.15" x2="593.65" y2="196.78"></line><line class="cycle-turbine" x1="593.65" y1="196.78" x2="622.73" y2="250.89"></line><line class="cycle-combustion" x1="622.73" y1="250.89" x2="850.60" y2="79.32"></line><line class="cycle-nozzle" x1="850.60" y1="79.32" x2="900" y2="52"></line></g>
+            <polyline class="brayton-path" points="129.18,475.55 179.53,416.15 593.65,196.78 622.73,250.89 850.60,79.32 900,52"></polyline>
+            <g class="brayton-stations">
+              <g class="brayton-station cycle-inlet"><circle cx="129.18" cy="475.55" r="9"></circle><text class="station-number" x="129.18" y="449.55">1</text><text class="station-name" x="129.18" y="465.55">Inlet</text></g>
+              <g class="brayton-station cycle-compressor"><circle cx="179.53" cy="416.15" r="9"></circle><text class="station-number" x="179.53" y="390.15">2</text><text class="station-name" x="179.53" y="406.15">Compressor</text></g>
+              <g class="brayton-station cycle-combustion"><circle cx="593.65" cy="196.78" r="9"></circle><text class="station-number" x="593.65" y="170.78">3</text><text class="station-name" x="593.65" y="186.78">Combustion</text></g>
+              <g class="brayton-station cycle-turbine"><circle cx="622.73" cy="250.89" r="9"></circle><text class="station-number" x="622.73" y="224.89">4</text><text class="station-name" x="622.73" y="240.89">Turbine</text></g>
+              <g class="brayton-station cycle-combustion"><circle cx="850.60" cy="79.32" r="9"></circle><text class="station-number" x="824.60" y="107.32">5</text><text class="station-name" x="824.60" y="123.32">Afterburner</text></g>
+              <g class="brayton-station cycle-nozzle"><circle cx="900" cy="52" r="9"></circle><text class="station-number" x="895" y="86">6</text><text class="station-name" x="895" y="102">Nozzle</text></g>
+            </g><circle class="brayton-marker-halo" r="18" cx="129.18" cy="475.55"></circle><circle class="brayton-marker" r="8" cx="129.18" cy="475.55"></circle>
+          </svg></div>
+          <label class="brayton-slider-label" for="brayton-slider"><span id="brayton-slider-copy">Move through the cycle</span><input id="brayton-slider" type="range" min="0" max="5" value="0" step="0.01" /></label>
+        </div>
+      </section>
+
+      <section class="subsystem feature-dark">
+        <div class="subsystem-visual compressor-visual compressor-model-shell">
+          <model-viewer class="compressor-model" src="/assets/prelim-cent-compressor-official.glb" alt="Interactive preliminary centrifugal compressor model" camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="1200" rotation-per-second="12deg" shadow-intensity="1.2" exposure="1.1" interaction-prompt="auto" loading="lazy"></model-viewer>
+          <button class="model-fullscreen" type="button" aria-label="View model fullscreen">Fullscreen</button>
+          <div class="model-controls-hint"><span>Drag to rotate</span><span>Scroll to zoom</span></div>
+          <span class="compressor-equation">Δh₀ = U₂cθ₂ − U₁cθ₁</span>
+        </div>
+        <div class="subsystem-copy">
+          <p class="eyebrow">02 · Compression</p><h2>Making pressure<br />from <em>motion.</em></h2>
+          <p>The compressor converts shaft work into pressure. Jotun’s compressor work uses Euler work, velocity triangles, loading, flow coefficient, reaction, diffusion limits, and slip to connect blade speed to pressure rise.</p>
+          <ul><li>Euler work and velocity-triangle development</li><li>Diffusion, slip, and loading checks</li><li>Geometry and performance will be published after design review</li></ul>
+        </div>
+      </section>
+
+      <section class="subsystem feature-light reverse">
+        <div class="subsystem-visual cans-visual" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="subsystem-copy">
+          <p class="eyebrow">03 · Combustion</p><h2>Four flames.<br />One <em>purpose.</em></h2>
+          <p>Four can combustors operate in parallel. Flow is distributed through primary, secondary, and dilution zones to support flame stability, combustion, and a controlled turbine inlet profile.</p>
+          <ul><li>Primary, secondary, and dilution-zone development</li><li>Fuel delivery and flame-stability work</li><li>Pressure-loss and liner-durability assessment</li></ul>
+        </div>
+      </section>
+
+      <section class="subsystem feature-blue">
+        <div class="subsystem-visual turbine-visual" aria-hidden="true"><div class="radial-machine"></div><span>ṁₐcₚΔT₀,c = ṁg cₚΔT₀,t</span></div>
+        <div class="subsystem-copy">
+          <p class="eyebrow">4 · Turbine</p><h2>The critical<br /><em>balance.</em></h2>
+          <p>The turbine must extract exactly enough work to drive the compressor while surviving the engine’s most demanding combination of temperature, rotational speed, and centrifugal load. Work matching ties both machines to the same shaft.</p>
+          <ul><li>Blade-root stress governed by material, geometry, and speed</li><li>Reaction, loading, and flow coefficient shape the stage</li><li>Thermal and mechanical limits require verification before operation</li></ul>
+        </div>
+      </section>
+
+      <section class="reheat section-pad">
+        <div class="section-heading"><p class="eyebrow">05–06 · Reheat and exhaust</p><h2>Verification<br /><em>before figures.</em></h2></div>
+        <div class="reheat-grid">
+          <article><h3>Afterburner development</h3><p>The afterburner remains in development. Its operating point and measured effect will be published only after the core engine state has been verified.</p></article>
+          <article><h3>Nozzle development</h3><p>The nozzle geometry will be matched to verified mass flow, pressure, temperature, and test data before performance figures are published.</p></article>
+        </div>
+      </section>
+
+      <section class="build-philosophy">
+        <div><p class="eyebrow">How we build</p><h2>Design what matters.<br />Buy what <em>must work.</em></h2></div>
+        <div class="philosophy-list">
+          <article><span>01</span><h3>Static first</h3><p>Controlled spool-up, a limited operating hold, and spool-down create a disciplined first test envelope.</p></article>
+          <article><span>02</span><h3>Evidence before claims</h3><p>Materials, temperatures, operating limits, and performance figures remain provisional until analysis and testing support them.</p></article>
+        </div>
+      </section>
+
+      <section class="project-next"><p class="eyebrow">The work continues</p><h2>Analysis. Manufacture.<br /><em>Ignition.</em></h2><a class="button" href="/team">Meet the team</a></section>
+    </main>
+    <footer class="site-footer"><div class="footer-main"><div class="footer-identity"><a class="brand" href="/" aria-label="Jet NTNU home"><img src="/assets/jet-ntnu-white-official.svg" alt="Jet NTNU" /></a><p>Norway's first student-run jet engine organization.</p><a class="footer-email" href="mailto:contact@jetntnu.no">contact@jetntnu.no</a></div><div class="footer-links"><div><p class="footer-label">Navigate</p><a href="/project-jotun">Project: Jotun</a><a href="/about">About Jet</a><a href="/team">Team</a></div><div><p class="footer-label">Take part</p><a href="/apply">Apply Now</a><a href="/contact">Contact</a><a href="mailto:partner@jetntnu.no">Partnership?</a></div><div><p class="footer-label">Follow the build</p><a href="https://www.linkedin.com/company/jet-ntnu/" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://www.instagram.com/jetntnu/" target="_blank" rel="noopener noreferrer">Instagram</a></div></div></div><div class="footer-bottom"><p>Student-built propulsion · Trondheim</p><p>Org. no. 937 996 179</p><p>© <span id="year"></span> Jet NTNU</p></div></footer>
+    <script src="script-language-nav-20260808.js"></script>
+    <script src="script-brayton-20260807c.js"></script>
+  <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "987ba73b1f2048519137190a3a7cea5f"}'></script><!-- Cloudflare Pages Analytics --><!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "987ba73b1f2048519137190a3a7cea5f"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>

@@ -1,0 +1,28 @@
+.partners-page{background:#00113d;color:#fff}.partners-hero{min-height:100vh;padding:clamp(155px,20vh,220px) 8vw 110px;position:relative;overflow:hidden;display:flex;align-items:center;background:radial-gradient(circle at 78% 42%,rgba(0,79,255,.3),transparent 30%),linear-gradient(145deg,#00113d,#001b5d)}
+.partners-copy{position:relative;z-index:2;width:min(940px,100%)}.partners-copy .eyebrow{color:#85b1ff}.partners-copy h1{max-width:none;font-size:clamp(5rem,11vw,11rem);line-height:.82}.partners-copy h1 em{color:#85b1ff}.partners-question{width:min(660px,100%);margin:3rem 0 2rem;font-size:clamp(1rem,1.4vw,1.3rem);line-height:1.75}.partners-button{display:inline-flex;align-items:center;justify-content:center;padding:1rem 2rem;border:1px solid #85b1ff;border-radius:999px;background:#004fff;color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;transition:.25s ease}.partners-button:hover{background:#fff;color:#00113d;border-color:#fff;transform:translateY(-2px)}.partners-note{margin:1.3rem 0 0;color:rgba(255,255,255,.48);font-size:.7rem}
+.partners-mark{position:absolute;right:-8vw;top:15%;width:min(48vw,700px);aspect-ratio:1;transform:rotate(45deg);border:1px solid rgba(133,177,255,.22)}.partners-mark span{position:absolute;inset:16%;border:1px solid rgba(133,177,255,.2)}.partners-mark span:nth-child(2){inset:31%}.partners-mark span:nth-child(3){inset:43%;background:#004fff;border:0;box-shadow:0 0 80px rgba(0,79,255,.6)}
+.partner-logos{
+  display:flex;
+  align-items:center;
+  gap:5rem;
+  flex-wrap:wrap;
+  margin-top:4rem;
+}
+
+.partner-logo{
+  display:block;
+  width:min(380px,70vw);
+  margin-top:0;
+  transition:.25s ease;
+}
+
+.partner-logo:hover{
+  transform:translateY(-3px);
+}
+
+.partner-logo img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+@media(max-width:800px){.partners-hero{min-height:850px;padding:150px 7vw 90px;align-items:flex-start}.partners-copy h1{font-size:clamp(4.4rem,20vw,7rem);line-height:.86}.partners-question{margin-top:2.4rem}.partners-mark{width:88vw;right:-38vw;top:48%;opacity:.5}}

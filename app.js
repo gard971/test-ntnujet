@@ -4,10 +4,16 @@ const http = require("http")
 const path = require("path")
 const dotenv = require("dotenv").config()
 const os = require("os")
+const coockieParser = require("cookie-parser")
 const { connectDatabase } = require("./db")
+const { apiRouter } = require("./routes/api")
 const server = http.createServer(app)
 const port = process.env.PORT
 const colorReset = "\x1b[0m"
+
+
+
+
 
 getPublicIp().then((publicIP) => {
     connectDatabase().then(() => {
@@ -33,8 +39,13 @@ getPublicIp().then((publicIP) => {
     })
     })
 })
-//helper functions:
 
+app.use(express.json());
+app.use(coockieParser());
+app.use("/api", apiRouter);
+
+
+//helper functions:
 function getPrivateIp() {
     const interfaces = os.networkInterfaces();
     for (const interfaceName in interfaces) {
@@ -73,4 +84,8 @@ async function getPublicIp() {
             reject(err);
         });
     });
+}
+
+module.exports = {
+    app
 }

@@ -57,5 +57,15 @@ apiRouter.post("/login", async (req, res) => {
     });
 });
 
+apiRouter.get("employees", async (req, res) => {
+    const result = await db
+        .select()
+        .from(employees);
+
+    res.status(200).json({
+        success: true,
+        employees: result
+    });
+});
 
 module.exports = { apiRouter };

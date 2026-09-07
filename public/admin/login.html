@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in — Jet NTNU Admin</title>
+    <meta name="description" content="Sign in to the Jet NTNU internal admin panel." />
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./admin.css" />
+    <link rel="stylesheet" href="./login.css" />
+  </head>
+  <body class="login-body">
+    <main class="login-wrap">
+      <div class="card login-card">
+        <div class="brand login-brand">
+          <span class="mark">JET</span>
+          <span class="brandname">NTNU · Admin</span>
+        </div>
+        <h1>Sign in</h1>
+        <p class="hint">Internal access only. Use your admin credentials.</p>
+        <form id="login-form" novalidate>
+          <div class="row">
+            <label>
+              Username
+              <input id="login-user" type="text" autocomplete="username" placeholder="admin" required />
+            </label>
+          </div>
+          <div class="row">
+            <label>
+              Password
+              <input id="login-pass" type="password" autocomplete="current-password" placeholder="••••••••" required />
+            </label>
+          </div>
+          <p class="login-error" id="login-error" role="alert" hidden>Wrong username or password.</p>
+          <div class="item-actions">
+            <button class="btn primary" type="submit">Sign in</button>
+          </div>
+        </form>
+      </div>
+    </main>
+    <div class="toast" id="toast" hidden></div>
+    <script src="./login.js"></script>
+  </body>
+</html>

@@ -16,8 +16,6 @@ apiRouter.use("/admin", requireAuth, adminRouter);
 
 apiRouter.post("/login", async (req, res) => {
     const { username, password } = req.body;
-    console.log(typeof admins)
-    console.log(typeof db)
     const result = await db
         .select()
         .from(admins)
@@ -47,7 +45,7 @@ apiRouter.post("/login", async (req, res) => {
 
     res.cookie("session", token, {
         httpOnly: true,
-        secure: true,
+        secure: false, // Set to true if using HTTPS
         sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24
     });

@@ -25,6 +25,8 @@ const employees = pgTable("employees", {
 })
 
 const admins = pgTable("admins", {
+    id: serial("id").primaryKey(),
+    
     username: varchar("username", { length: 255 }).notNull(),
 
     password: varchar("password", { length: 255 }).notNull()

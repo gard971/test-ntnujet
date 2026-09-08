@@ -21,6 +21,15 @@ function deleteSession(token) {
     sessions.delete(token);
 }
 
+function deleteSessionByUserId(userId) {
+    userId = parseInt(userId); // Ensure userId is an integer
+    for (const [token, session] of sessions) {
+        if (session.userId === userId) {
+            sessions.delete(token);
+        }
+    }
+}
+
 setInterval(() => {
     const now = Date.now();
 
@@ -34,5 +43,6 @@ setInterval(() => {
 module.exports = {
     createSession,
     getSession,
-    deleteSession
+    deleteSession,
+    deleteSessionByUserId
 };

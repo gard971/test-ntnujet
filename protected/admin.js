@@ -1,0 +1,190 @@
+const originalFetch = window.fetch;
+
+window.fetch = async (...args) => {
+  const response = await originalFetch(...args);
+
+  if (response.status === 401) {
+    window.location.href = "/admin/login";
+  }
+
+  return response;
+};
+
+(function () {
+  fetch("/api/employees")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.employees.length > 0) {
+        document.getElementById("emp-empty").style.display = "none";
+      } else {
+        document.getElementById("emp-empty").style.display = "block";
+      }
+      el("emp-count").textContent = data.employees.length;
+      data.employees.forEach((employee) => {
+        let htmlString = `
+            <li class="item">
+                <div class="item-head">
+                    <span class="item-title">${employee.name}</span>
+                    <span class="badge">Propulsion</span>
+                 </div>
+                 <div class="item-meta">Propulsion engineer · ${employee.email}</div>
+                 <div class="item-body">${employee.shortBio}</div>
+                 <div class="item-actions">
+                     <button class="link" data-edit-emp="abc123">Edit</button>
+                     <button class="link danger" data-del-emp="abc123" onclick="deleteEmployee('${employee.id}', event)">Delete</button>
+                   </div>
+            </li>
+        `
+        const employeeList = document.getElementById("emp-list");
+        employeeList.insertAdjacentHTML("beforeend", htmlString);
+      });
+    })
+    .catch((error) => {
+      console.error("Error retrieving employees:", error);
+    });
+
+  fetch("/api/admin/admin")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json()
+      .then((data) => {
+        if (data.admins.length > 0) {
+          document.getElementById("adm-empty").style.display = "none";
+        } else {
+          document.getElementById("adm-empty").style.display = "block";
+        }
+        el("adm-count").textContent = data.admins.length;
+        data.admins.forEach((admin) => {
+          let htmlString = `
+            <li class="item">
+              <div class="item-head">
+                <span class="item-title">${admin.username}</span>
+                <span class="badge">admin</span>
+              </div>
+              <div class="item-actions">
+                <button class="link danger" data-del-adm="ghi012" onclick="deleteAdmin('${admin.id}', event)">Delete</button>
+              </div>
+            </li>
+
+          `
+          el("adm-list").insertAdjacentHTML("beforeend", htmlString);
+        })
+      })
+    })
+})();
+
+document.getElementById("employee-form").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the default form submission behavior
+  fetch("/api/admin/employee", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      fullname: document.getElementById("emp-name").value,
+      role: document.getElementById("emp-role").value,
+      team: document.getElementById("emp-team").value,
+      email: document.getElementById("emp-email").value,
+      shortBio: document.getElementById("emp-bio").value
+    })
+
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Employee added:", data);
+      // Clear the form
+      document.getElementById("employee-form").reset();
+    })
+    .catch((error) => {
+      console.error("Error adding employee:", error);
+    });
+});
+
+function deleteEmployee(employeeId, event) {
+  if (!confirm("Are you sure you want to delete this employee?")) {
+    return; // Exit the function if the user cancels
+  }
+  fetch(`/api/admin/employee`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: employeeId })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Employee deleted:", data);
+      // Remove the employee from the list
+      const li = event.target.closest("li");
+      if (li) {
+        li.remove();
+      }
+    })
+    .catch((error) => {
+      console.error("Error deleting employee:", error);
+    });
+}
+
+function deleteAdmin(adminId, event) {
+  if (!confirm("Are you sure you want to delete this admin? This action will also log them out of all sessions.")) {
+    return; // Exit the function if the user cancels
+  }
+  fetch(`/api/admin/admin`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: adminId })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Admin deleted:", data);
+      // Remove the admin from the list
+      const li = event.target.closest("li");
+      if (li) {
+        li.remove();
+      }
+      el("adm-count").textContent = parseInt(el("adm-count").textContent) - 1;
+    })
+    .catch((error) => {
+      console.error("Error deleting admin:", error);
+    });
+}
+
+/* ---------------- tabs ---------------- */
+el("tabs").addEventListener("click", function (e) {
+  var btn = e.target.closest(".tab");
+  if (!btn) return;
+  var name = btn.dataset.tab;
+  document.querySelectorAll(".tab").forEach(function (t) {
+    t.classList.toggle("is-active", t === btn);
+  });
+  document.querySelectorAll(".panel").forEach(function (p) {
+    p.classList.toggle("is-active", p.id === "panel-" + name);
+  });
+  location.hash = name;
+});
+
+if (location.hash === "#newsletters") {
+  var nb = document.querySelector('.tab[data-tab="newsletters"]');
+  if (nb) nb.click();
+}
+function el(id) {
+  return document.getElementById(id);
+}

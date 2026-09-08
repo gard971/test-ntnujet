@@ -2,6 +2,8 @@ const express = require("express")
 const adminRouter = express.Router();
 const { db } = require("../db");
 const { employees, admins, newsletters, newsletterDrafts } = require("../db/schema");
+const { eq } = require("drizzle-orm");
+const { deleteSessionByUserId } = require("../auth/sessions");
 
 adminRouter.post("/admin", async (req, res) => {
     const { username, password, fullName} = req.body;
@@ -31,11 +33,11 @@ adminRouter.post("/admin", async (req, res) => {
 });
 
 adminRouter.delete("/admin", async (req, res) => {
-    const { username } = req.body;
+    const { id } = req.body;
 
     const result = await db
         .delete(admins)
-        .where(eq(admins.username, username))
+        .where(eq(admins.id, id))
         .returning();
 
     if (result.length === 0) {
@@ -43,7 +45,9 @@ adminRouter.delete("/admin", async (req, res) => {
             error: "Admin not found"
         });
     }
-
+    // Delete all sessions associated with the deleted admin
+    deleteSessionByUserId(id);
+    
     res.status(200).json({
         success: true,
         message: "Admin deleted successfully"
@@ -79,11 +83,11 @@ adminRouter.post("/employee", async (req, res) => {
 });
 
 adminRouter.delete("/employee", async (req, res) => {
-    const { email } = req.body;
+    const { id } = req.body;
 
     const result = await db
         .delete(employees)
-        .where(eq(employees.email, email))
+        .where(eq(employees.id, id))
         .returning();
 
     if (result.length === 0) {

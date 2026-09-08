@@ -7,6 +7,7 @@ const os = require("os")
 const coockieParser = require("cookie-parser")
 const { connectDatabase } = require("./db")
 const { apiRouter } = require("./routes/api")
+const { requireAuth } = require("./middleware/requireAuth")
 const server = http.createServer(app)
 const port = process.env.PORT
 const colorReset = "\x1b[0m"
@@ -43,6 +44,17 @@ getPublicIp().then((publicIP) => {
 app.use(express.json());
 app.use(coockieParser());
 app.use("/api", apiRouter);
+
+app.use("/protected", 
+    requireAuth,
+    express.static(path.join(__dirname + '/protected'), { extensions: ["html"] })
+)
+
+app.get("/admin", requireAuth, (req, res) => {
+    res.sendFile(
+        path.join(__dirname, "protected", "index.html")
+    )
+})
 
 
 //helper functions:

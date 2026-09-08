@@ -4,6 +4,7 @@ const { db } = require("../db");
 const { employees, admins, newsletters, newsletterDrafts } = require("../db/schema");
 const { eq } = require("drizzle-orm");
 const { deleteSessionByUserId } = require("../auth/sessions");
+const bcrypt = require("bcrypt");
 
 adminRouter.post("/admin", async (req, res) => {
     const { username, password, fullName} = req.body;
@@ -66,14 +67,15 @@ adminRouter.get("/admin", async (req, res) => {
 });
 
 adminRouter.post("/employee", async (req, res) => {
-    const { fullname, role, team, email, shortBio } = req.body;
+    const { fullname, role, team, email, shortBio, boardMember } = req.body;
 
     const newEmployee = await db.insert(employees).values({
         name: fullname,
         position: role,
         department: team,
         email: email,
-        shortBio: shortBio
+        shortBio: shortBio,
+        boardMember: boardMember
     }).returning();
 
     res.status(201).json({
@@ -214,5 +216,16 @@ adminRouter.delete("/newsletter/draft", async (req, res) => {
     });
 });
 
+adminRouter.post("/logout", async (req, res) => {
+    const token = req.cookies.session;
+    if (token) {
+        deleteSessionByUserId(req.userId);
+        res.clearCookie("session");
+    }
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully"
+    });
+});
 
 module.exports = { adminRouter }

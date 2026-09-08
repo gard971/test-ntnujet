@@ -52,12 +52,14 @@
                   Team
                   <select id="emp-team" required>
                     <option value="" disabled selected hidden>Select team</option>
-                    <option>Management</option>
-                    <option>Propulsion</option>
-                    <option>Structures</option>
-                    <option>Electronics</option>
-                    <option>Software</option>
+                    <option>Compressor</option>
+                    <option>Combustion</option>
+                    <option>Turbine</option>
+                    <option>Nozzle</option>
+                    <option>DAQ</option>
+                    <option>Mentors</option>
                     <option>Marketing</option>
+                    <option>Finance</option>
                   </select>
                 </label>
                 <label>
@@ -69,6 +71,10 @@
                 Short bio
                 <textarea id="emp-bio" rows="3" placeholder="Third-year mechanical engineering student…" required></textarea>
               </label>
+                 <label>
+                  Is a part of the board?
+                  <input id="emp-board" type="checkbox" />
+                </label>
               <div class="actions">
                 <button class="btn primary" type="submit" id="emp-submit">Add employee</button>
                 <button class="btn ghost" type="button" id="emp-cancel" hidden>Cancel edit</button>

@@ -20,29 +20,13 @@ window.fetch = async (...args) => {
     })
     .then((data) => {
       if (data.employees.length > 0) {
-        document.getElementById("emp-empty").style.display = "none";
+        el("emp-empty").style.display = "none";
       } else {
-        document.getElementById("emp-empty").style.display = "block";
+        el("emp-empty").style.display = "block";
       }
       el("emp-count").textContent = data.employees.length;
-      data.employees.forEach((employee) => {
-        let htmlString = `
-            <li class="item">
-                <div class="item-head">
-                    <span class="item-title">${employee.name}</span>
-                    <span class="badge">Propulsion</span>
-                 </div>
-                 <div class="item-meta">Propulsion engineer · ${employee.email}</div>
-                 <div class="item-body">${employee.shortBio}</div>
-                 <div class="item-actions">
-                     <button class="link" data-edit-emp="abc123">Edit</button>
-                     <button class="link danger" data-del-emp="abc123" onclick="deleteEmployee('${employee.id}', event)">Delete</button>
-                   </div>
-            </li>
-        `
-        const employeeList = document.getElementById("emp-list");
-        employeeList.insertAdjacentHTML("beforeend", htmlString);
-      });
+      addEmployeeToList(data.employees);
+
     })
     .catch((error) => {
       console.error("Error retrieving employees:", error);
@@ -54,43 +38,30 @@ window.fetch = async (...args) => {
         throw new Error("Network response was not ok");
       }
       return response.json()
-      .then((data) => {
-        if (data.admins.length > 0) {
-          document.getElementById("adm-empty").style.display = "none";
-        } else {
-          document.getElementById("adm-empty").style.display = "block";
-        }
-        el("adm-count").textContent = data.admins.length;
-        data.admins.forEach((admin) => {
-          let htmlString = `
-            <li class="item">
-              <div class="item-head">
-                <span class="item-title">${admin.username}</span>
-                <span class="badge">admin</span>
-              </div>
-              <div class="item-actions">
-                <button class="link danger" data-del-adm="ghi012" onclick="deleteAdmin('${admin.id}', event)">Delete</button>
-              </div>
-            </li>
-
-          `
-          el("adm-list").insertAdjacentHTML("beforeend", htmlString);
+        .then((data) => {
+          if (data.admins.length > 0) {
+            el("adm-empty").style.display = "none";
+          } else {
+            el("adm-empty").style.display = "block";
+          }
+          el("adm-count").textContent = data.admins.length;
+          addAdminToList(data.admins);
         })
-      })
     })
 })();
 
-document.getElementById("employee-form").addEventListener("submit", function (event) {
+el("employee-form").addEventListener("submit", function (event) {
   event.preventDefault(); // Prevent the default form submission behavior
   fetch("/api/admin/employee", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      fullname: document.getElementById("emp-name").value,
-      role: document.getElementById("emp-role").value,
-      team: document.getElementById("emp-team").value,
-      email: document.getElementById("emp-email").value,
-      shortBio: document.getElementById("emp-bio").value
+      fullname: el("emp-name").value,
+      role: el("emp-role").value,
+      team: el("emp-team").value,
+      email: el("emp-email").value,
+      shortBio: el("emp-bio").value,
+      boardMember: el("emp-board").checked
     })
 
   })
@@ -103,10 +74,66 @@ document.getElementById("employee-form").addEventListener("submit", function (ev
     .then((data) => {
       console.log("Employee added:", data);
       // Clear the form
-      document.getElementById("employee-form").reset();
+      el("employee-form").reset();
+      // Add the new employee to the list
+      addEmployeeToList([data.employee]);
+      el("emp-count").textContent = parseInt(el("emp-count").textContent) + 1;
     })
     .catch((error) => {
       console.error("Error adding employee:", error);
+    });
+});
+
+el("admin-form").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the default form submission behavior
+  if (el("adm-pass").value !== el("adm-pass2").value) {
+    alert("Passwords do not match!");
+    return;
+  }
+  fetch("/api/admin/admin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: el("adm-user").value,
+      password: el("adm-pass").value
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Admin added:", data);
+      // Clear the form
+      el("admin-form").reset();
+      // Add the new admin to the list
+      addAdminToList([data.admin]);
+      el("adm-count").textContent = parseInt(el("adm-count").textContent) + 1;
+    })
+    .catch((error) => {
+      console.error("Error adding admin:", error);
+    });
+});
+
+el("logout").addEventListener("click", function () {
+  fetch("/api/admin/logout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Logged out:", data);
+      window.location.href = "/admin/login";
+    })
+    .catch((error) => {
+      console.error("Error logging out:", error);
     });
 });
 
@@ -165,6 +192,45 @@ function deleteAdmin(adminId, event) {
     .catch((error) => {
       console.error("Error deleting admin:", error);
     });
+}
+
+function addAdminToList(admins) {
+  admins.forEach((admin) => {
+    let htmlString = `
+    <li class="item">
+              <div class="item-head">
+                <span class="item-title">${admin.username}</span>
+                <span class="badge">admin</span>
+              </div>
+              <div class="item-actions">
+                <button class="link danger" data-del-adm="ghi012" onclick="deleteAdmin('${admin.id}', event)">Delete</button>
+              </div>
+            </li>
+
+    `
+    el("adm-list").insertAdjacentHTML("beforeend", htmlString);
+  });
+}
+
+function addEmployeeToList(employees) {
+  employees.forEach((employee) => {
+    let htmlString = `
+            <li class="item">
+                <div class="item-head">
+                    <span class="item-title">${employee.name}</span>
+                    <span class="badge">Propulsion</span>
+                 </div>
+                 <div class="item-meta">${employee.department} · ${employee.email}</div>
+                 <div class="item-body">${employee.shortBio}</div>
+                 <div class="item-actions">
+                     <button class="link" data-edit-emp="abc123">Edit</button>
+                     <button class="link danger" data-del-emp="abc123" onclick="deleteEmployee('${employee.id}', event)">Delete</button>
+                   </div>
+            </li>
+        `
+    const employeeList = el("emp-list");
+    employeeList.insertAdjacentHTML("beforeend", htmlString);
+  });
 }
 
 /* ---------------- tabs ---------------- */

@@ -20,7 +20,9 @@ const employees = pgTable("employees", {
 
     email: varchar("email", { length: 255 }).notNull(),
 
-    imageUrl: text("image_url").default("https://via.placeholder.com/150"),
+    imageUrl: text("image_url").default("assets/temp-profile-20260806.png"),
+
+    boardMember: boolean("board_member").default(false)
 
 })
 

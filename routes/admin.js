@@ -1,5 +1,7 @@
 const express = require("express")
 const adminRouter = express.Router();
+const { db } = require("../db");
+const { employees, admins, newsletters, newsletterDrafts } = require("../db/schema");
 
 adminRouter.post("/admin", async (req, res) => {
     const { username, password, fullName} = req.body;
@@ -63,11 +65,11 @@ adminRouter.post("/employee", async (req, res) => {
     const { fullname, role, team, email, shortBio } = req.body;
 
     const newEmployee = await db.insert(employees).values({
-        fullname,
-        role,
-        team,
-        email,
-        shortBio
+        name: fullname,
+        position: role,
+        department: team,
+        email: email,
+        shortBio: shortBio
     }).returning();
 
     res.status(201).json({
@@ -95,4 +97,118 @@ adminRouter.delete("/employee", async (req, res) => {
         message: "Employee deleted successfully"
     });
 });
+
+adminRouter.post("/newsletter", async (req, res) => {
+    const { title, category, publishDate, author, description, imageUrl, content } = req.body;
+
+    const newNewsletter = await db.insert(newsletters).values({
+        title,
+        category,
+        publishDate,
+        author,
+        description,
+        imageUrl,
+        content
+    }).returning();
+
+    res.status(201).json({
+        success: true,
+        newsletter: newNewsletter[0]
+    });
+});
+adminRouter.delete("/newsletter", async (req, res) => {
+    const { title } = req.body;
+    const result = await db
+        .delete(newsletters)
+        .where(eq(newsletters.title, title))
+        .returning();
+    if (result.length === 0) {
+        return res.status(404).json({
+            error: "Newsletter not found"
+        });
+    }
+    res.status(200).json({
+        success: true,
+        message: "Newsletter deleted successfully"
+    });
+});
+
+adminRouter.get("/newsletter", async (req, res) => {
+    const { id } = req.body;
+    const result = await db
+        .select()
+        .from(newsletters)
+        .where(eq(newsletters.id, id))
+        .limit(1);
+    if (result.length === 0) {
+        return res.status(404).json({
+            error: "Newsletter not found"
+        });
+    }
+    res.status(200).json({
+        success: true,
+        newsletter: result[0]
+    });
+});
+
+adminRouter.get("/newsletters", async (req, res) => {
+    const result = await db
+        .select()
+        .from(newsletters);
+
+    res.status(200).json({
+        success: true,
+        newsletters: result
+    });
+});
+
+
+adminRouter.post("/newsletter/draft", async (req, res) => {
+    const { title, category, publishDate, author, description, imageUrl, content } = req.body;
+
+    const newNewsletterDraft = await db.insert(newsletterDrafts).values({
+        title,
+        category,
+        publishDate,
+        author,
+        description,
+        imageUrl,
+        content
+    }).returning();
+
+    res.status(201).json({
+        success: true,
+        newsletterDraft: newNewsletterDraft[0]
+    });
+});
+
+adminRouter.get("/newsletter/drafts", async (req, res) => {
+    const result = await db
+        .select()
+        .from(newsletterDrafts);
+
+    res.status(200).json({
+        success: true,
+        newsletterDrafts: result
+    });
+});
+
+adminRouter.delete("/newsletter/draft", async (req, res) => {
+    const { id } = req.body;
+    const result = await db
+        .delete(newsletterDrafts)
+        .where(eq(newsletterDrafts.id, id))
+        .returning();
+    if (result.length === 0) {
+        return res.status(404).json({
+            error: "Newsletter draft not found"
+        });
+    }
+    res.status(200).json({
+        success: true,
+        message: "Newsletter draft deleted successfully"
+    });
+});
+
+
 module.exports = { adminRouter }

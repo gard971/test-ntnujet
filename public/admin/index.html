@@ -35,7 +35,7 @@
           <div class="card">
             <h1>Add employee</h1>
             <p class="hint">New members appear in the list on the right.</p>
-            <form id="employee-form" novalidate>
+            <form id="employee-form" >
               <input type="hidden" id="employee-id" />
               <div class="row">
                 <label>
@@ -50,7 +50,8 @@
               <div class="row">
                 <label>
                   Team
-                  <select id="emp-team">
+                  <select id="emp-team" required>
+                    <option value="" disabled selected hidden>Select team</option>
                     <option>Management</option>
                     <option>Propulsion</option>
                     <option>Structures</option>
@@ -66,7 +67,7 @@
               </div>
               <label>
                 Short bio
-                <textarea id="emp-bio" rows="3" placeholder="Third-year mechanical engineering student…"></textarea>
+                <textarea id="emp-bio" rows="3" placeholder="Third-year mechanical engineering student…" required></textarea>
               </label>
               <div class="actions">
                 <button class="btn primary" type="submit" id="emp-submit">Add employee</button>

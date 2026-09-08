@@ -5,8 +5,7 @@ const bcrypt = require("bcrypt");
 const { eq } = require("drizzle-orm");
 
 const { db } = require("../db");
-const { admins } = require("../db/schema");
-
+const { employees, admins } = require("../db/schema");
 const { createSession } = require("../auth/sessions");
 const { requireAuth } = require("../middleware/requireAuth");
 const { adminRouter } = require("./admin");
@@ -17,7 +16,8 @@ apiRouter.use("/admin", requireAuth, adminRouter);
 
 apiRouter.post("/login", async (req, res) => {
     const { username, password } = req.body;
-
+    console.log(typeof admins)
+    console.log(typeof db)
     const result = await db
         .select()
         .from(admins)
@@ -57,7 +57,7 @@ apiRouter.post("/login", async (req, res) => {
     });
 });
 
-apiRouter.get("employees", async (req, res) => {
+apiRouter.get("/employees", async (req, res) => {
     const result = await db
         .select()
         .from(employees);

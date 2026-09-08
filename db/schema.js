@@ -10,27 +10,67 @@ const {
 const employees = pgTable("employees", {
     id: serial("id").primaryKey(),
 
-    name: varchar("name", {length: 255}).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
 
-    position: varchar("position", {length: 255}).notNull(),
+    position: varchar("position", { length: 255 }).notNull(),
 
-    department: varchar("department", {length: 255}),
+    department: varchar("department", { length: 255 }),
 
-    imageUrl: text("image_url"),
+    shortBio: text("short_bio"),
 
-    createdAt: timestamp("created_at")
-    .notNull()
-    .defaultNow()
+    email: varchar("email", { length: 255 }).notNull(),
+
+    imageUrl: text("image_url").default("https://via.placeholder.com/150"),
 
 })
 
 const admins = pgTable("admins", {
-    username: varchar("username", {length: 255}).notNull(),
+    username: varchar("username", { length: 255 }).notNull(),
 
-    password: varchar("password", {length: 255}).notNull()
+    password: varchar("password", { length: 255 }).notNull()
 })
 
-module.exports ={
+const newsletters = pgTable("newsletters", {
+
+    id: serial("id").primaryKey(),
+
+    title: varchar("title", { length: 255 }).notNull(),
+
+    category: varchar("category", { length: 255 }).notNull(),
+
+    publishDate: timestamp("publish_date").notNull(),
+
+    author: varchar("author", { length: 255 }).notNull(),
+
+    description: text("description").notNull(),
+
+    imageUrl: text("image_url"),
+
+    content: text("content").notNull()
+});
+
+const newsletterDrafts = pgTable("newsletter_drafts", {
+
+    id: serial("id").primaryKey(),
+
+    title: varchar("title", { length: 255 }).notNull(),
+
+    category: varchar("category", { length: 255 }).notNull(),
+
+    publishDate: timestamp("publish_date").notNull(),
+
+    author: varchar("author", { length: 255 }).notNull(),
+
+    description: text("description").notNull(),
+
+    imageUrl: text("image_url"),
+
+    content: text("content").notNull()
+});
+
+module.exports = {
     employees,
-    admins
+    admins,
+    newsletters,
+    newsletterDrafts
 }

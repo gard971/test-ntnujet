@@ -1,54 +1,27 @@
-(function () {
-  "use strict";
-
-  var SESSION_KEY = "jetntnu.session";
-  var ADMINS_KEY = "jetntnu.admins";
-  var USERS = [{ user: "admin", pass: "jetntnu2026" }];
-
-  function storedUsers() {
-    try {
-      var raw = localStorage.getItem(ADMINS_KEY);
-      var parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function el(id) {
-    return document.getElementById(id);
-  }
-
-  try {
-    if (localStorage.getItem(SESSION_KEY)) {
-      window.location.replace("./index.html");
-      return;
-    }
-  } catch (e) {
-    /* storage unavailable */
-  }
-
-  el("login-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var user = el("login-user").value.trim().toLowerCase();
-    var pass = el("login-pass").value;
-    var ok = USERS.concat(storedUsers()).some(function (u) {
-      return u.user === user && u.pass === pass;
+document.getElementById("login-form").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the default form submission behavior
+  fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: document.getElementById("login-user").value,
+      password: document.getElementById("login-pass").value
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Login successful:", data);
+      // Redirect to the admin page or perform any other action upon successful login
+      window.location.href = "/admin";
+    })
+    .catch((error) => {
+      console.error("Error during login:", error);
+      // Display an error message to the user
+      document.getElementById("login-error").hidden = false;
     });
-
-    if (!ok) {
-      el("login-error").hidden = false;
-      el("login-pass").value = "";
-      el("login-pass").focus();
-      return;
-    }
-
-    el("login-error").hidden = true;
-    try {
-      localStorage.setItem(SESSION_KEY, JSON.stringify({ user: user, at: Date.now() }));
-    } catch (err) {
-      /* storage unavailable */
-    }
-    window.location.replace("./index.html");
   });
-})();

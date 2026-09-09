@@ -23,6 +23,7 @@
       <nav class="tabs" id="tabs">
         <button class="tab is-active" data-tab="employees" type="button">Employees</button>
         <button class="tab" data-tab="newsletters" type="button">Newsletters</button>
+        <button class="tab" data-tab="openings" type="button">Openings</button>
         <button class="tab" data-tab="admins" type="button">Admins</button>
       </nav>
       <button class="btn" id="logout" type="button">Sign out</button>
@@ -151,6 +152,257 @@
             </div>
             <ul class="list" id="news-list"></ul>
             <p class="empty" id="news-empty">No newsletters yet.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- OPENINGS -->
+      <section class="panel" id="panel-openings">
+        <div class="dept-board">
+          <div class="dept-toolbar">
+            <h2 class="dept-heading">Department <em>openings</em></h2>
+            <button class="dept-expand-all" type="button">Expand all</button>
+          </div>
+
+          <div class="dept-grid">
+            <!-- Board -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Board</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings">
+                  <li class="dept-opening">
+                    <div>
+                      <span class="dept-opening-title">Head of Marketing</span>
+                      <span class="dept-opening-meta">Board · Full year</span>
+                    </div>
+                    <button class="link danger" type="button">Remove</button>
+                  </li>
+                </ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Deputy team lead" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="board-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- Compressor -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Compressor</span>
+                <span class="dept-hire">For hire</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings">
+                  <li class="dept-opening">
+                    <div>
+                      <span class="dept-opening-title">Compressor design engineer</span>
+                      <span class="dept-opening-meta">Compressor · Autumn 2026</span>
+                    </div>
+                    <button class="link danger" type="button">Remove</button>
+                  </li>
+                </ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. CFD analyst" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="compressor-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- Combustion -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Combustion</span>
+                <span class="dept-hire">For hire</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings"></ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Combustor testing assistant" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="combustion-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- Turbine -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Turbine</span>
+                <span class="dept-hire">For hire</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings"></ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Blade cooling engineer" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="turbine-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- Nozzle -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Nozzle</span>
+                <span class="dept-hire">For hire</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings"></ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Nozzle geometry designer" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="nozzle-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- DAQ & Electronics -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">DAQ &amp; Electronics</span>
+                <span class="dept-hire">For hire</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings"></ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Embedded systems engineer" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="daq-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- Mentors -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Mentors</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings"></ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Industry mentor — turbines" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="mentors-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- Marketing -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Marketing</span>
+                <span class="dept-hire">For hire</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings"></ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Content creator" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="marketing-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
+
+            <!-- Finance & Partnership -->
+            <details class="dept">
+              <summary class="dept-bar">
+                <span class="dept-name">Finance &amp; Partnership</span>
+                <span class="dept-hire">For hire</span>
+                <span class="dept-plus" aria-hidden="true">+</span>
+              </summary>
+              <div class="dept-body">
+                <ul class="dept-openings"></ul>
+                <form class="dept-form">
+                  <label>
+                    Opening title
+                    <input type="text" placeholder="e.g. Sponsor coordinator" />
+                  </label>
+                  <label>
+                    Short description
+                    <textarea rows="2" placeholder="What is this role about?"></textarea>
+                  </label>
+                  <div class="actions">
+                    <button class="btn dept-add" id="finance-btn" type="submit">Add opening</button>
+                  </div>
+                </form>
+              </div>
+            </details>
           </div>
         </div>
       </section>

@@ -48,6 +48,36 @@ window.fetch = async (...args) => {
           addAdminToList(data.admins);
         })
     })
+
+   const buttons = document.getElementsByClassName("btn dept-add")
+   for(let i=0; i<buttons.length; i++){
+    buttons[i].addEventListener('click', event => {
+      event.preventDefault();
+      let openingForm = event.target.parentNode.parentNode
+      let formTitle = openingForm.querySelector('input').value
+      let formDescription = openingForm.querySelector('textarea').value
+      fetch("/api/admin/opening", {
+        method: "POST",
+        headers: {"Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: formTitle,
+          description: formDescription,
+          department: buttons[i].id.replace("-btn", "")
+        })
+      })
+      .then((response) => {
+        if(!response.ok){
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("opening added:"+data)
+        //add to list
+      })
+
+    } )
+   }
 })();
 
 el("employee-form").addEventListener("submit", function (event) {

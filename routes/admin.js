@@ -1,7 +1,7 @@
 const express = require("express")
 const adminRouter = express.Router();
 const { db } = require("../db");
-const { employees, admins, newsletters, newsletterDrafts } = require("../db/schema");
+const { employees, admins, newsletters, newsletterDrafts, openings } = require("../db/schema");
 const { eq } = require("drizzle-orm");
 const { deleteSessionByUserId } = require("../auth/sessions");
 const bcrypt = require("bcrypt");
@@ -225,6 +225,38 @@ adminRouter.post("/logout", async (req, res) => {
     res.status(200).json({
         success: true,
         message: "Logged out successfully"
+    });
+});
+
+adminRouter.post("/opening", async (req, res) => {
+    const { title, description, department } = req.body;
+
+    const newOpening = await db.insert(openings).values({
+        title,
+        description,
+        department
+    }).returning();
+
+    res.status(201).json({
+        success: true,
+        opening: newOpening[0]
+    });
+});
+
+adminRouter.delete("/opening", async (req, res) => {
+    const { id } = req.body;
+    const result = await db
+        .delete(openings)
+        .where(eq(openings.id, id))
+        .returning();
+    if (result.length === 0) {
+        return res.status(404).json({
+            error: "Opening not found"
+        });
+    }
+    res.status(200).json({
+        success: true,
+        message: "Opening deleted successfully"
     });
 });
 

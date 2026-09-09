@@ -72,9 +72,22 @@ const newsletterDrafts = pgTable("newsletter_drafts", {
     content: text("content").notNull()
 });
 
+const openings = pgTable("openings", {
+
+    id: serial("id").primaryKey(),
+
+    title: varchar("title", { length: 255 }).notNull(),
+
+    description: text("description").notNull(),
+
+    department: varchar("department", { length: 255 }).notNull(),
+
+});
+
 module.exports = {
     employees,
     admins,
     newsletters,
-    newsletterDrafts
+    newsletterDrafts,
+    openings
 }

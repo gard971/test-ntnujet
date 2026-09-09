@@ -49,8 +49,32 @@ window.fetch = async (...args) => {
         })
     })
 
-   const buttons = document.getElementsByClassName("btn dept-add")
-   for(let i=0; i<buttons.length; i++){
+  fetch("/api/openings")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok")
+      }
+      return response.json()
+        .then((data) => {
+          data.openings.forEach(opening => {
+            const deptUl = el(`${opening.department}-btn`).parentElement.parentElement.parentElement.querySelector(`.dept-openings`)
+            let li = document.createElement("li")
+            li.classList.add("dept-opening")
+            li.innerHTML = `
+                <div>
+                    <span class="dept-opening-title">${opening.title}</span>
+                    <span class="dept-opening-meta">${opening.description}</span>
+                  </div>
+                  <button class="link danger" type="button" onclick="deleteOpening(${opening.id})">Remove</button>
+            `
+            deptUl.appendChild(li)
+          })
+        })
+
+    })
+
+  const buttons = document.getElementsByClassName("btn dept-add")
+  for (let i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', event => {
       event.preventDefault();
       let openingForm = event.target.parentNode.parentNode
@@ -58,26 +82,37 @@ window.fetch = async (...args) => {
       let formDescription = openingForm.querySelector('textarea').value
       fetch("/api/admin/opening", {
         method: "POST",
-        headers: {"Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: formTitle,
           description: formDescription,
           department: buttons[i].id.replace("-btn", "")
         })
       })
-      .then((response) => {
-        if(!response.ok){
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("opening added:"+data)
-        //add to list
-      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          let opening = data.opening
+          const deptUl = el(`${opening.department}-btn`).parentElement.parentElement.parentElement.querySelector(`.dept-openings`)
+          let li = document.createElement("li")
+          li.classList.add("dept-opening")
+          li.innerHTML = `
+                <div>
+                    <span class="dept-opening-title">${opening.title}</span>
+                    <span class="dept-opening-meta">${opening.description}</span>
+                  </div>
+                  <button class="link danger" type="button" onclick="deleteOpening(${opening.id})">Remove</button>
+            `
+          deptUl.appendChild(li)
+          openingForm.reset()
+        })
 
-    } )
-   }
+    })
+  }
 })();
 
 el("employee-form").addEventListener("submit", function (event) {
@@ -261,6 +296,23 @@ function addEmployeeToList(employees) {
     const employeeList = el("emp-list");
     employeeList.insertAdjacentHTML("beforeend", htmlString);
   });
+}
+
+function deleteOpening(openingID) {
+  fetch("/api/admin/opening", {
+    method: "DELETE",
+    headers: { "content-Type": "application/json" },
+    body: JSON.stringify({ id: openingID })
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok.")
+      }
+      return response.json()
+        .then(data => {
+          document.querySelector(`[onclick="deleteOpening(${openingID})"`).parentElement.remove()
+        })
+    })
 }
 
 /* ---------------- tabs ---------------- */

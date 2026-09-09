@@ -1,458 +1,486 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jet NTNU Admin — Employees &amp; Newsletters</title>
-    <meta
-      name="description"
-      content="Internal admin panel for Jet NTNU: add team members and compose newsletters."
-    />
-    <meta name="robots" content="noindex" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/admin/admin.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <div class="brand">
-        <span class="mark">JET</span>
-        <span class="brandname">NTNU · Admin</span>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jet NTNU Admin — Employees &amp; Newsletters</title>
+  <meta name="description" content="Internal admin panel for Jet NTNU: add team members and compose newsletters." />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/admin/admin.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">JET</span>
+      <span class="brandname">NTNU · Admin</span>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab is-active" data-tab="employees" type="button">Employees</button>
+      <button class="tab" data-tab="newsletters" type="button">Newsletters</button>
+      <button class="tab" data-tab="openings" type="button">Openings</button>
+      <button class="tab" data-tab="admins" type="button">Admins</button>
+    </nav>
+    <button class="btn" id="logout" type="button">Sign out</button>
+  </header>
+
+  <main class="wrap">
+    <!-- EMPLOYEES -->
+    <section class="panel is-active" id="panel-employees">
+      <div class="grid">
+        <div class="card">
+          <h1>Add employee</h1>
+          <p class="hint">New members appear in the list on the right.</p>
+          <form id="employee-form">
+            <input type="hidden" id="employee-id" />
+            <div class="row">
+              <label>
+                Full name
+                <input id="emp-name" type="text" placeholder="Ola Nordmann" required />
+              </label>
+              <label>
+                Role
+                <input id="emp-role" type="text" placeholder="Propulsion engineer" required />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                Team
+                <select id="emp-team" required>
+                  <option value="" disabled selected hidden>Select team</option>
+                  <option>Compressor</option>
+                  <option>Combustion</option>
+                  <option>Turbine</option>
+                  <option>Nozzle</option>
+                  <option>Interface</option>
+                  <option>Mentors</option>
+                  <option>Marketing</option>
+                  <option>Finance</option>
+                  <option>Avionics</option>
+                </select>
+              </label>
+              <label>
+                Email
+                <input id="emp-email" type="email" placeholder="name@jetntnu.no" required />
+              </label>
+            </div>
+            <label>
+              Short bio
+              <textarea id="emp-bio" rows="3" placeholder="Third-year mechanical engineering student…"
+                required></textarea>
+            </label>
+            <label>
+              Is a part of the board?
+              <input id="emp-board" type="checkbox" />
+            </label>
+            <div class="actions">
+              <button class="btn primary" type="submit" id="emp-submit">Add employee</button>
+              <button class="btn ghost" type="button" id="emp-cancel" hidden>Cancel edit</button>
+            </div>
+            <p class="error" id="emp-error" hidden></p>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Employees <span class="count" id="emp-count">0</span></h2>
+            <input id="emp-search" class="search" type="search" placeholder="Search…" />
+          </div>
+          <ul class="list" id="emp-list"></ul>
+          <p class="empty" id="emp-empty">No employees yet.</p>
+        </div>
       </div>
-      <nav class="tabs" id="tabs">
-        <button class="tab is-active" data-tab="employees" type="button">Employees</button>
-        <button class="tab" data-tab="newsletters" type="button">Newsletters</button>
-        <button class="tab" data-tab="openings" type="button">Openings</button>
-        <button class="tab" data-tab="admins" type="button">Admins</button>
-      </nav>
-      <button class="btn" id="logout" type="button">Sign out</button>
-    </header>
+    </section>
 
-    <main class="wrap">
-      <!-- EMPLOYEES -->
-      <section class="panel is-active" id="panel-employees">
-        <div class="grid">
-          <div class="card">
-            <h1>Add employee</h1>
-            <p class="hint">New members appear in the list on the right.</p>
-            <form id="employee-form" >
-              <input type="hidden" id="employee-id" />
-              <div class="row">
-                <label>
-                  Full name
-                  <input id="emp-name" type="text" placeholder="Ola Nordmann" required />
-                </label>
-                <label>
-                  Role
-                  <input id="emp-role" type="text" placeholder="Propulsion engineer" required />
-                </label>
-              </div>
-              <div class="row">
-                <label>
-                  Team
-                  <select id="emp-team" required>
-                    <option value="" disabled selected hidden>Select team</option>
-                    <option>Compressor</option>
-                    <option>Combustion</option>
-                    <option>Turbine</option>
-                    <option>Nozzle</option>
-                    <option>DAQ</option>
-                    <option>Mentors</option>
-                    <option>Marketing</option>
-                    <option>Finance</option>
-                  </select>
-                </label>
-                <label>
-                  Email
-                  <input id="emp-email" type="email" placeholder="name@jetntnu.no" required />
-                </label>
-              </div>
+    <!-- NEWSLETTERS -->
+    <section class="panel" id="panel-newsletters">
+      <div class="grid">
+        <div class="card">
+          <h1>Create newsletter</h1>
+          <p class="hint">Save as draft, or publish when it is ready to send.</p>
+          <form id="news-form" novalidate>
+            <input type="hidden" id="news-id" />
+            <label>
+              Title
+              <input id="news-title" type="text" placeholder="Spring test campaign results" required />
+            </label>
+            <div class="row">
               <label>
-                Short bio
-                <textarea id="emp-bio" rows="3" placeholder="Third-year mechanical engineering student…" required></textarea>
+                Category
+                <select id="news-category">
+                  <option value="propulsion">Propulsion</option>
+                  <option value="structures">Structures</option>
+                  <option value="testing">Testing</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="team">Team</option>
+                  <option value="general">General</option>
+                </select>
               </label>
-                 <label>
-                  Is a part of the board?
-                  <input id="emp-board" type="checkbox" />
-                </label>
-              <div class="actions">
-                <button class="btn primary" type="submit" id="emp-submit">Add employee</button>
-                <button class="btn ghost" type="button" id="emp-cancel" hidden>Cancel edit</button>
-              </div>
-              <p class="error" id="emp-error" hidden></p>
-            </form>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <h2>Employees <span class="count" id="emp-count">0</span></h2>
-              <input id="emp-search" class="search" type="search" placeholder="Search…" />
+              <label>
+                Publish date
+                <input id="news-date" type="date" />
+              </label>
             </div>
-            <ul class="list" id="emp-list"></ul>
-            <p class="empty" id="emp-empty">No employees yet.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- NEWSLETTERS -->
-      <section class="panel" id="panel-newsletters">
-        <div class="grid">
-          <div class="card">
-            <h1>Create newsletter</h1>
-            <p class="hint">Save as draft, or publish when it is ready to send.</p>
-            <form id="news-form" novalidate>
-              <input type="hidden" id="news-id" />
-              <label>
-                Title
-                <input id="news-title" type="text" placeholder="Spring test campaign results" required />
-              </label>
-              <div class="row">
-                <label>
-                  Category
-                  <select id="news-category">
-                    <option value="propulsion">Propulsion</option>
-                    <option value="structures">Structures</option>
-                    <option value="testing">Testing</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="team">Team</option>
-                    <option value="general">General</option>
-                  </select>
-                </label>
-                <label>
-                  Publish date
-                  <input id="news-date" type="date" />
-                </label>
-              </div>
-              <label>
-                Author
-                <input id="news-author" type="text" placeholder="Kari Nordmann" />
-              </label>
-              <label>
-                Description
-                <textarea id="news-description" rows="2" placeholder="One or two lines shown in the archive list…"></textarea>
-              </label>
-              <label>
-                Blog text
-                <textarea id="news-body" rows="12" placeholder="Write the full issue… leave a blank line between paragraphs." required></textarea>
-              </label>
-              <div class="actions">
-                <button class="btn primary" type="submit">Save draft</button>
-                <button class="btn accent" type="button" id="news-publish">Publish</button>
-                <button class="btn ghost" type="button" id="news-cancel" hidden>Cancel edit</button>
-              </div>
-              <p class="error" id="news-error" hidden></p>
-            </form>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <h2>Newsletters <span class="count" id="news-count">0</span></h2>
-              <input id="news-search" class="search" type="search" placeholder="Search…" />
+            <label>
+              Author
+              <input id="news-author" type="text" placeholder="Kari Nordmann" />
+            </label>
+            <label>
+              Description
+              <textarea id="news-description" rows="2"
+                placeholder="One or two lines shown in the archive list…"></textarea>
+            </label>
+            <label>
+              Blog text
+              <textarea id="news-body" rows="12"
+                placeholder="Write the full issue… leave a blank line between paragraphs." required></textarea>
+            </label>
+            <div class="actions">
+              <button class="btn primary" type="submit">Save draft</button>
+              <button class="btn accent" type="button" id="news-publish">Publish</button>
+              <button class="btn ghost" type="button" id="news-cancel" hidden>Cancel edit</button>
             </div>
-            <ul class="list" id="news-list"></ul>
-            <p class="empty" id="news-empty">No newsletters yet.</p>
-          </div>
+            <p class="error" id="news-error" hidden></p>
+          </form>
         </div>
-      </section>
 
-      <!-- OPENINGS -->
-      <section class="panel" id="panel-openings">
-        <div class="dept-board">
-          <div class="dept-toolbar">
-            <h2 class="dept-heading">Department <em>openings</em></h2>
-            <button class="dept-expand-all" type="button">Expand all</button>
+        <div class="card">
+          <div class="card-head">
+            <h2>Newsletters <span class="count" id="news-count">0</span></h2>
+            <input id="news-search" class="search" type="search" placeholder="Search…" />
           </div>
-
-          <div class="dept-grid">
-            <!-- Board -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Board</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings">
-                  <li class="dept-opening">
-                    <div>
-                      <span class="dept-opening-title">Head of Marketing</span>
-                      <span class="dept-opening-meta">Board · Full year</span>
-                    </div>
-                    <button class="link danger" type="button">Remove</button>
-                  </li>
-                </ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Deputy team lead" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="board-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- Compressor -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Compressor</span>
-                <span class="dept-hire">For hire</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings">
-                  <li class="dept-opening">
-                    <div>
-                      <span class="dept-opening-title">Compressor design engineer</span>
-                      <span class="dept-opening-meta">Compressor · Autumn 2026</span>
-                    </div>
-                    <button class="link danger" type="button">Remove</button>
-                  </li>
-                </ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. CFD analyst" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="compressor-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- Combustion -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Combustion</span>
-                <span class="dept-hire">For hire</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings"></ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Combustor testing assistant" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="combustion-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- Turbine -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Turbine</span>
-                <span class="dept-hire">For hire</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings"></ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Blade cooling engineer" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="turbine-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- Nozzle -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Nozzle</span>
-                <span class="dept-hire">For hire</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings"></ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Nozzle geometry designer" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="nozzle-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- DAQ & Electronics -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">DAQ &amp; Electronics</span>
-                <span class="dept-hire">For hire</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings"></ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Embedded systems engineer" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="daq-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- Mentors -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Mentors</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings"></ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Industry mentor — turbines" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="mentors-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- Marketing -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Marketing</span>
-                <span class="dept-hire">For hire</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings"></ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Content creator" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="marketing-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-
-            <!-- Finance & Partnership -->
-            <details class="dept">
-              <summary class="dept-bar">
-                <span class="dept-name">Finance &amp; Partnership</span>
-                <span class="dept-hire">For hire</span>
-                <span class="dept-plus" aria-hidden="true">+</span>
-              </summary>
-              <div class="dept-body">
-                <ul class="dept-openings"></ul>
-                <form class="dept-form">
-                  <label>
-                    Opening title
-                    <input type="text" placeholder="e.g. Sponsor coordinator" />
-                  </label>
-                  <label>
-                    Short description
-                    <textarea rows="2" placeholder="What is this role about?"></textarea>
-                  </label>
-                  <div class="actions">
-                    <button class="btn dept-add" id="finance-btn" type="submit">Add opening</button>
-                  </div>
-                </form>
-              </div>
-            </details>
-          </div>
+          <ul class="list" id="news-list"></ul>
+          <p class="empty" id="news-empty">No newsletters yet.</p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ADMINS -->
-      <section class="panel" id="panel-admins">
-        <div class="grid">
-          <div class="card">
-            <h1>Create admin user</h1>
-            <p class="hint">New admins can sign in with the username and password you set here.</p>
-            <form id="admin-form" novalidate>
-              <div class="row">
-                <label>
-                  Username
-                  <input id="adm-user" type="text" autocomplete="off" placeholder="kari" required />
-                </label>
-                <label>
-                  Full name
-                  <input id="adm-name" type="text" placeholder="Kari Nordmann" />
-                </label>
-              </div>
-              <div class="row">
-                <label>
-                  Password
-                  <input id="adm-pass" type="password" autocomplete="new-password" placeholder="At least 8 characters" required />
-                </label>
-                <label>
-                  Repeat password
-                  <input id="adm-pass2" type="password" autocomplete="new-password" required />
-                </label>
-              </div>
-              <div class="actions">
-                <button class="btn primary" type="submit">Create admin</button>
-              </div>
-              <p class="error" id="adm-error" hidden></p>
-            </form>
-          </div>
+    <!-- OPENINGS -->
+    <section class="panel" id="panel-openings">
+      <div class="dept-board">
+        <div class="dept-toolbar">
+          <h2 class="dept-heading">Department <em>openings</em></h2>
+          <button class="dept-expand-all" type="button">Expand all</button>
+        </div>
 
-          <div class="card">
-            <div class="card-head">
-              <h2>Admins <span class="count" id="adm-count">0</span></h2>
+        <div class="dept-grid">
+          <!-- Board -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Board</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings">
+                <li class="dept-opening">
+                  <div>
+                    <span class="dept-opening-title">Head of Marketing</span>
+                    <span class="dept-opening-meta">Board · Full year</span>
+                  </div>
+                  <button class="link danger" type="button">Remove</button>
+                </li>
+              </ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Deputy team lead" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="board-btn" type="submit">Add opening</button>
+                </div>
+              </form>
             </div>
-            <ul class="list" id="adm-list"></ul>
-            <p class="empty" id="adm-empty">No extra admins yet.</p>
-          </div>
-        </div>
-      </section>
-    </main>
+          </details>
 
-    <div class="toast" id="toast" hidden></div>
-    <script src="/protected/admin.js"></script>
-  </body>
+          <!-- Compressor -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Compressor</span>
+              <span class="dept-hire">For hire</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings">
+                <li class="dept-opening">
+                  <div>
+                    <span class="dept-opening-title">Compressor design engineer</span>
+                    <span class="dept-opening-meta">Compressor · Autumn 2026</span>
+                  </div>
+                  <button class="link danger" type="button">Remove</button>
+                </li>
+              </ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. CFD analyst" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="compressor-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+
+          <!-- Combustion -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Combustion</span>
+              <span class="dept-hire">For hire</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Combustor testing assistant" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="combustion-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+
+          <!-- Turbine -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Turbine</span>
+              <span class="dept-hire">For hire</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Blade cooling engineer" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="turbine-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+
+          <!-- Nozzle -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Nozzle</span>
+              <span class="dept-hire">For hire</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Nozzle geometry designer" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="nozzle-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+
+          <!-- Interface -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Interface</span>
+              <span class="dept-hire">For hire</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Embedded systems engineer" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="interface-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+
+          <!-- Mentors -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Mentors</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Industry mentor — turbines" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="mentors-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+
+          <!-- Marketing -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Marketing</span>
+              <span class="dept-hire">For hire</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Content creator" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="marketing-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+
+          <!-- Finance & Partnership -->
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Finance &amp; Partnership</span>
+              <span class="dept-hire">For hire</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Sponsor coordinator" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="finance-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+          <details class="dept">
+            <summary class="dept-bar">
+              <span class="dept-name">Avionics</span>
+              <span class="dept-plus" aria-hidden="true">+</span>
+            </summary>
+            <div class="dept-body">
+              <ul class="dept-openings"></ul>
+              <form class="dept-form">
+                <label>
+                  Opening title
+                  <input type="text" placeholder="e.g. Industry mentor — turbines" />
+                </label>
+                <label>
+                  Short description
+                  <textarea rows="2" placeholder="What is this role about?"></textarea>
+                </label>
+                <div class="actions">
+                  <button class="btn dept-add" id="avionics-btn" type="submit">Add opening</button>
+                </div>
+              </form>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMINS -->
+    <section class="panel" id="panel-admins">
+      <div class="grid">
+        <div class="card">
+          <h1>Create admin user</h1>
+          <p class="hint">New admins can sign in with the username and password you set here.</p>
+          <form id="admin-form" novalidate>
+            <div class="row">
+              <label>
+                Username
+                <input id="adm-user" type="text" autocomplete="off" placeholder="kari" required />
+              </label>
+              <label>
+                Full name
+                <input id="adm-name" type="text" placeholder="Kari Nordmann" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                Password
+                <input id="adm-pass" type="password" autocomplete="new-password" placeholder="At least 8 characters"
+                  required />
+              </label>
+              <label>
+                Repeat password
+                <input id="adm-pass2" type="password" autocomplete="new-password" required />
+              </label>
+            </div>
+            <div class="actions">
+              <button class="btn primary" type="submit">Create admin</button>
+            </div>
+            <p class="error" id="adm-error" hidden></p>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Admins <span class="count" id="adm-count">0</span></h2>
+          </div>
+          <ul class="list" id="adm-list"></ul>
+          <p class="empty" id="adm-empty">No extra admins yet.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden></div>
+  <script src="/protected/admin.js"></script>
+</body>
+
 </html>

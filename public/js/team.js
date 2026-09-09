@@ -14,6 +14,11 @@
                                 <div><strong>${employee.name}</strong><span>${employee.shortBio}</span></div>
                             </article>`;
                     group.querySelector('.member-grid').insertAdjacentHTML('beforeend', htmlString);
+
+                    if(employee.boardMember){
+                        const boardElement = document.getElementById("board-div").querySelector(".member-grid")
+                        boardElement.insertAdjacentHTML("beforeend", htmlString)
+                    }
                 });
             });
         })

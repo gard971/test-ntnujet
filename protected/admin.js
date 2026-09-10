@@ -115,38 +115,49 @@ window.fetch = async (...args) => {
   }
 })();
 
-el("employee-form").addEventListener("submit", function (event) {
+el("employee-form").addEventListener("submit", async function (event) {
   event.preventDefault(); // Prevent the default form submission behavior
-  fetch("/api/admin/employee", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      fullname: el("emp-name").value,
-      role: el("emp-role").value,
-      team: el("emp-team").value,
-      email: el("emp-email").value,
-      shortBio: el("emp-bio").value,
-      boardMember: el("emp-board").checked
-    })
 
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Employee added:", data);
-      // Clear the form
-      el("employee-form").reset();
-      // Add the new employee to the list
-      addEmployeeToList([data.employee]);
-      el("emp-count").textContent = parseInt(el("emp-count").textContent) + 1;
-    })
-    .catch((error) => {
-      console.error("Error adding employee:", error);
+  try {
+    const formData = new FormData();
+    const file = el("new-emp-pic").files[0]
+
+    if(file){
+      formData.append("image", file)
+    }
+
+    formData.append("fullname", el("emp-name").value);
+    formData.append("role", el("emp-role").value);
+    formData.append("team", el("emp-team").value);
+    formData.append("email", el("emp-email").value);
+    formData.append("shortBio", el("emp-bio").value);
+    formData.append("boardMember", el("emp-board").checked);
+
+    const response = await fetch("/api/admin/employee", {
+      method: "POST",
+      body: formData
     });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+
+    console.log("Employee added:", data);
+
+    // Clear the form
+    el("employee-form").reset();
+
+    // Add the new employee to the list
+    addEmployeeToList([data.employee]);
+
+    el("emp-count").textContent =
+      parseInt(el("emp-count").textContent) + 1;
+
+  } catch (error) {
+    console.error("Error adding employee:", error);
+  }
 });
 
 el("admin-form").addEventListener("submit", function (event) {
@@ -313,6 +324,22 @@ function deleteOpening(openingID) {
           document.querySelector(`[onclick="deleteOpening(${openingID})"`).parentElement.remove()
         })
     })
+}
+
+async function uploadEmployeeImage() {
+  const image = document.querySelector("#new-emp-pic").files[0]
+  if (!image) return false;
+
+  const formData = new FormData();
+  formData.append("image", image)
+
+  const response = await fetch("/api/admin/employeeImage", {
+    method: "POST",
+    body: formData
+  })
+
+  const data = await response.json();
+  return data.success;
 }
 
 /* ---------------- tabs ---------------- */

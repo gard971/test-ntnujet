@@ -2751,11 +2751,11 @@ footer {
 }
 
 .finance-group {
-    --team-accent: #d4af37;
+    --team-accent: #004fff;
 }
 
 .daq-group {
-    --team-accent: #00ff00;
+    --team-accent: #004fff;
 }
 
 .compressor-group {
@@ -2763,23 +2763,23 @@ footer {
 }
 
 .combustion-group {
-    --team-accent: #ff6700;
+    --team-accent: #004fff;
 }
 
 .turbine-group {
-    --team-accent: #00ffbc;
+    --team-accent: #004fff;
 }
 
 .nozzle-group {
-    --team-accent: #ff0000;
+    --team-accent: #004fff;
 }
 
 .marketing-group {
-    --team-accent: #00dbff;
+    --team-accent: #004fff;
 }
 
 .mentors-group {
-    --team-accent: #a7adb5;
+    --team-accent: #004fff;
 }
 
 .team-group summary {

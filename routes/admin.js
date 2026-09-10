@@ -5,6 +5,28 @@ const { employees, admins, newsletters, newsletterDrafts, openings } = require("
 const { eq } = require("drizzle-orm");
 const { deleteSessionByUserId } = require("../auth/sessions");
 const bcrypt = require("bcrypt");
+const multer = require("multer")
+const path = require("path")
+const fs = require("fs")
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "../public/assets/employepics"));
+  },
+
+  filename: (req, file, cb) => {
+    const extension = path.extname(file.originalname);
+
+    const uniqueName =
+      Date.now() + "-" + Math.round(Math.random() * 1E9);
+
+    cb(null, uniqueName + extension);
+  }
+});
+
+const upload = multer({
+  storage: storage
+});
 
 adminRouter.post("/admin", async (req, res) => {
     const { username, password, fullName} = req.body;
@@ -66,8 +88,8 @@ adminRouter.get("/admin", async (req, res) => {
     });
 });
 
-adminRouter.post("/employee", async (req, res) => {
-    const { fullname, role, team, email, shortBio, boardMember } = req.body;
+adminRouter.post("/employee", upload.single("image"), async (req, res) => {
+    const { fullname, role, team, email, shortBio, boardMember} = req.body;
 
     const newEmployee = await db.insert(employees).values({
         name: fullname,
@@ -75,7 +97,8 @@ adminRouter.post("/employee", async (req, res) => {
         department: team,
         email: email,
         shortBio: shortBio,
-        boardMember: boardMember
+        boardMember: boardMember === "true",
+        imageUrl: req.file ? "/assets/employepics/"+req.file.filename : undefined
     }).returning();
 
     res.status(201).json({
@@ -86,11 +109,14 @@ adminRouter.post("/employee", async (req, res) => {
 
 adminRouter.delete("/employee", async (req, res) => {
     const { id } = req.body;
-
     const result = await db
         .delete(employees)
         .where(eq(employees.id, id))
         .returning();
+
+    await fs.promises.unlink(path.join(__dirname, "../public/", result[0].imageUrl))
+
+
 
     if (result.length === 0) {
         return res.status(404).json({
@@ -259,5 +285,22 @@ adminRouter.delete("/opening", async (req, res) => {
         message: "Opening deleted successfully"
     });
 });
+
+adminRouter.post("/employeeImage", upload.single("image"), async (req, res) => {
+    console.log(req.file.originalname)
+    console.log(req.file.filename)
+    const test = await db
+    .update(employees)
+    .set({
+        imageUrl: req.file.filename
+    })
+    .where(eq(employees.imageUrl, req.file.originalname))
+    .returning();
+
+    console.log(test)
+    res.json({
+        success:true
+    })
+})
 
 module.exports = { adminRouter }

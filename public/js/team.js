@@ -17,7 +17,11 @@
 
                     if(employee.boardMember){
                         const boardElement = document.getElementById("board-div").querySelector(".member-grid")
-                        boardElement.insertAdjacentHTML("beforeend", htmlString)
+                        if(employee.shortBio.includes("Chief Executive Officer") || employee.shortBio.includes("CEO")){
+                            boardElement.insertAdjacentHTML("afterbegin", htmlString)
+                        }else {
+                            boardElement.insertAdjacentHTML("beforeend", htmlString)
+                        }
                         group.querySelector('.member-grid').insertAdjacentHTML('afterbegin', htmlString);
                     } else {
                         group.querySelector('.member-grid').insertAdjacentHTML('beforeend', htmlString);

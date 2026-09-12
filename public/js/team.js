@@ -11,7 +11,7 @@
                 teamEmployees.forEach(employee => {
                     const htmlString = `
                     <article class="member-card"><img src="${employee.imageUrl}" alt="Temporary profile for ${employee.name}">
-                                <div><strong>${employee.name}</strong><span>${employee.shortBio}</span></div>
+                                <div><strong>${employee.name}</strong><span>${employee.position}</span><span>${employee.shortBio}</span></div>
                             </article>`;
                     group.querySelector('.member-grid').insertAdjacentHTML('beforeend', htmlString);
 

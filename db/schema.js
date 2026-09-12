@@ -18,7 +18,7 @@ const employees = pgTable("employees", {
 
     shortBio: text("short_bio"),
 
-    email: varchar("email", { length: 255 }).notNull(),
+    email: varchar("email", { length: 255 }),
 
     imageUrl: text("image_url").default("assets/temp-profile-20260806.png"),
 

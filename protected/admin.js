@@ -1,3 +1,4 @@
+let employeesCache = [];
 const originalFetch = window.fetch;
 
 window.fetch = async (...args) => {
@@ -19,6 +20,7 @@ window.fetch = async (...args) => {
       return response.json();
     })
     .then((data) => {
+      employeesCache = data.employees
       if (data.employees.length > 0) {
         el("emp-empty").style.display = "none";
       } else {
@@ -116,48 +118,70 @@ window.fetch = async (...args) => {
 })();
 
 el("employee-form").addEventListener("submit", async function (event) {
-  event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault();
 
-  try {
-    const formData = new FormData();
-    const file = el("new-emp-pic").files[0]
+    try {
+        const employeeId = el("employee-id").value;
+        const isEditing = employeeId !== "";
 
-    if(file){
-      formData.append("image", file)
+        const formData = new FormData();
+
+        const file = el("new-emp-pic").files[0];
+
+        if (file) {
+            formData.append("image", file);
+        }
+
+        formData.append("fullname", el("emp-name").value);
+        formData.append("role", el("emp-role").value);
+        formData.append("team", el("emp-team").value);
+        formData.append("email", el("emp-email").value);
+        formData.append("shortBio", el("emp-bio").value);
+        formData.append("boardMember", el("emp-board").checked);
+
+        const url = isEditing
+            ? `/api/admin/employee/${employeeId}`
+            : "/api/admin/employee";
+
+        const method = isEditing ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+            method,
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        if (isEditing) {
+            // Oppdater employee i lokal cache
+            employeesCache = employeesCache.map(employee =>
+                String(employee.id) === String(data.employee.id)
+                    ? data.employee
+                    : employee
+            );
+
+            // Bygg listen på nytt
+            el("emp-list").innerHTML = "";
+            addEmployeeToList(employeesCache);
+
+        } else {
+            // Ny employee
+            employeesCache.push(data.employee);
+            addEmployeeToList([data.employee]);
+
+            el("emp-count").textContent =
+                parseInt(el("emp-count").textContent) + 1;
+        }
+
+        resetEmployeeForm();
+
+    } catch (error) {
+        console.error("Error saving employee:", error);
     }
-
-    formData.append("fullname", el("emp-name").value);
-    formData.append("role", el("emp-role").value);
-    formData.append("team", el("emp-team").value);
-    formData.append("email", el("emp-email").value);
-    formData.append("shortBio", el("emp-bio").value);
-    formData.append("boardMember", el("emp-board").checked);
-
-    const response = await fetch("/api/admin/employee", {
-      method: "POST",
-      body: formData
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-
-    console.log("Employee added:", data);
-
-    // Clear the form
-    el("employee-form").reset();
-
-    // Add the new employee to the list
-    addEmployeeToList([data.employee]);
-
-    el("emp-count").textContent =
-      parseInt(el("emp-count").textContent) + 1;
-
-  } catch (error) {
-    console.error("Error adding employee:", error);
-  }
 });
 
 el("admin-form").addEventListener("submit", function (event) {
@@ -299,7 +323,7 @@ function addEmployeeToList(employees) {
                  <div class="item-meta">${employee.department} · ${employee.email}</div>
                  <div class="item-body">${employee.shortBio}</div>
                  <div class="item-actions">
-                     <button class="link" data-edit-emp="abc123">Edit</button>
+                     <button class="link" data-edit-emp="abc123" onclick="editEmployee('${employee.id}')">Edit</button>
                      <button class="link danger" data-del-emp="abc123" onclick="deleteEmployee('${employee.id}', event)">Delete</button>
                    </div>
             </li>
@@ -326,20 +350,42 @@ function deleteOpening(openingID) {
     })
 }
 
-async function uploadEmployeeImage() {
-  const image = document.querySelector("#new-emp-pic").files[0]
-  if (!image) return false;
+function editEmployee(id) {
+    const employee = employeesCache.find(
+        employee => String(employee.id) === String(id)
+    );
 
-  const formData = new FormData();
-  formData.append("image", image)
+    if (!employee) {
+        console.error("Employee not found:", id);
+        return;
+    }
 
-  const response = await fetch("/api/admin/employeeImage", {
-    method: "POST",
-    body: formData
-  })
+    el("employee-id").value = employee.id;
+    el("emp-name").value = employee.name;
+    el("emp-role").value = employee.position;
+    el("emp-team").value = employee.department;
+    el("emp-email").value = employee.email;
+    el("emp-bio").value = employee.shortBio;
+    el("emp-board").checked = employee.boardMember;
 
-  const data = await response.json();
-  return data.success;
+    el("emp-title").textContent = "Edit employee";
+    el("emp-submit").textContent = "Save changes";
+    el("emp-cancel").hidden = false;  
+}
+
+
+
+el("emp-cancel").addEventListener("click", function () {
+    resetEmployeeForm();
+});
+
+function resetEmployeeForm() {
+    el("employee-form").reset();
+    el("employee-id").value = "";
+
+    el("emp-title").textContent = "Add employee";
+    el("emp-submit").textContent = "Add employee";
+    el("emp-cancel").hidden = true;
 }
 
 /* ---------------- tabs ---------------- */

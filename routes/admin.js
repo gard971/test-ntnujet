@@ -286,6 +286,73 @@ adminRouter.delete("/opening", async (req, res) => {
     });
 });
 
+adminRouter.put("/employee/:id", upload.single("image"), async (req, res) => {
+    const id = Number(req.params.id);
+
+    const {
+        fullname,
+        role,
+        team,
+        email,
+        shortBio,
+        boardMember
+    } = req.body;
+
+    const existingEmployee = await db
+        .select()
+        .from(employees)
+        .where(eq(employees.id, id))
+        .limit(1);
+
+    if (existingEmployee.length === 0) {
+        return res.status(404).json({
+            error: "Employee not found"
+        });
+    }
+
+    const oldEmployee = existingEmployee[0];
+
+    let imageUrl = oldEmployee.imageUrl;
+
+    if (req.file) {
+        imageUrl = "/assets/employepics/" + req.file.filename;
+    }
+
+    const result = await db
+        .update(employees)
+        .set({
+            name: fullname,
+            position: role,
+            department: team,
+            email,
+            shortBio,
+            boardMember: boardMember === "true",
+            imageUrl
+        })
+        .where(eq(employees.id, id))
+        .returning();
+
+    // Hvis nytt bilde ble lastet opp, slett det gamle
+    if (req.file && oldEmployee.imageUrl) {
+        const oldImagePath = path.join(
+            __dirname,
+            "../public",
+            oldEmployee.imageUrl.replace(/^\/+/, "")
+        );
+
+        try {
+            await fs.promises.unlink(oldImagePath);
+        } catch (error) {
+            console.error("Could not delete old employee image:", error);
+        }
+    }
+
+    res.status(200).json({
+        success: true,
+        employee: result[0]
+    });
+});
+
 adminRouter.post("/employeeImage", upload.single("image"), async (req, res) => {
     console.log(req.file.originalname)
     console.log(req.file.filename)

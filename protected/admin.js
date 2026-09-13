@@ -118,70 +118,70 @@ window.fetch = async (...args) => {
 })();
 
 el("employee-form").addEventListener("submit", async function (event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    try {
-        const employeeId = el("employee-id").value;
-        const isEditing = employeeId !== "";
+  try {
+    const employeeId = el("employee-id").value;
+    const isEditing = employeeId !== "";
 
-        const formData = new FormData();
+    const formData = new FormData();
 
-        const file = el("new-emp-pic").files[0];
+    const file = el("new-emp-pic").files[0];
 
-        if (file) {
-            formData.append("image", file);
-        }
-
-        formData.append("fullname", el("emp-name").value);
-        formData.append("role", el("emp-role").value);
-        formData.append("team", el("emp-team").value);
-        formData.append("email", el("emp-email").value);
-        formData.append("shortBio", el("emp-bio").value);
-        formData.append("boardMember", el("emp-board").checked);
-
-        const url = isEditing
-            ? `/api/admin/employee/${employeeId}`
-            : "/api/admin/employee";
-
-        const method = isEditing ? "PUT" : "POST";
-
-        const response = await fetch(url, {
-            method,
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-
-        if (isEditing) {
-            // Oppdater employee i lokal cache
-            employeesCache = employeesCache.map(employee =>
-                String(employee.id) === String(data.employee.id)
-                    ? data.employee
-                    : employee
-            );
-
-            // Bygg listen på nytt
-            el("emp-list").innerHTML = "";
-            addEmployeeToList(employeesCache);
-
-        } else {
-            // Ny employee
-            employeesCache.push(data.employee);
-            addEmployeeToList([data.employee]);
-
-            el("emp-count").textContent =
-                parseInt(el("emp-count").textContent) + 1;
-        }
-
-        resetEmployeeForm();
-
-    } catch (error) {
-        console.error("Error saving employee:", error);
+    if (file) {
+      formData.append("image", file);
     }
+
+    formData.append("fullname", el("emp-name").value);
+    formData.append("role", el("emp-role").value);
+    formData.append("team", el("emp-team").value);
+    formData.append("email", el("emp-email").value);
+    formData.append("shortBio", el("emp-bio").value);
+    formData.append("boardMember", el("emp-board").checked);
+
+    const url = isEditing
+      ? `/api/admin/employee/${employeeId}`
+      : "/api/admin/employee";
+
+    const method = isEditing ? "PUT" : "POST";
+
+    const response = await fetch(url, {
+      method,
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+
+    if (isEditing) {
+      // Oppdater employee i lokal cache
+      employeesCache = employeesCache.map(employee =>
+        String(employee.id) === String(data.employee.id)
+          ? data.employee
+          : employee
+      );
+
+      // Bygg listen på nytt
+      el("emp-list").innerHTML = "";
+      addEmployeeToList(employeesCache);
+
+    } else {
+      // Ny employee
+      employeesCache.push(data.employee);
+      addEmployeeToList([data.employee]);
+
+      el("emp-count").textContent =
+        parseInt(el("emp-count").textContent) + 1;
+    }
+
+    resetEmployeeForm();
+
+  } catch (error) {
+    console.error("Error saving employee:", error);
+  }
 });
 
 el("admin-form").addEventListener("submit", function (event) {
@@ -236,6 +236,40 @@ el("logout").addEventListener("click", function () {
       console.error("Error logging out:", error);
     });
 });
+
+el("news-publish").addEventListener("click", async (e) => {
+  e.preventDefault();
+  try {
+    const content = await editor.save();
+
+    const response = await fetch("/api/admin/newsletters", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        title: el("news-title").value,
+        description: el("news-description").value,
+        author: el("news-author").value,
+        publishDate:el("news-date").value,
+        content: content
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("Could not publish newsletter");
+    }
+
+    const data = await response.json();
+
+    console.log("Published:", data);
+
+  } catch (error) {
+    console.error(error);
+  }
+})
 
 function deleteEmployee(employeeId, event) {
   if (!confirm("Are you sure you want to delete this employee?")) {
@@ -351,41 +385,41 @@ function deleteOpening(openingID) {
 }
 
 function editEmployee(id) {
-    const employee = employeesCache.find(
-        employee => String(employee.id) === String(id)
-    );
+  const employee = employeesCache.find(
+    employee => String(employee.id) === String(id)
+  );
 
-    if (!employee) {
-        console.error("Employee not found:", id);
-        return;
-    }
+  if (!employee) {
+    console.error("Employee not found:", id);
+    return;
+  }
 
-    el("employee-id").value = employee.id;
-    el("emp-name").value = employee.name;
-    el("emp-role").value = employee.position;
-    el("emp-team").value = employee.department;
-    el("emp-email").value = employee.email;
-    el("emp-bio").value = employee.shortBio;
-    el("emp-board").checked = employee.boardMember;
+  el("employee-id").value = employee.id;
+  el("emp-name").value = employee.name;
+  el("emp-role").value = employee.position;
+  el("emp-team").value = employee.department;
+  el("emp-email").value = employee.email;
+  el("emp-bio").value = employee.shortBio;
+  el("emp-board").checked = employee.boardMember;
 
-    el("emp-title").textContent = "Edit employee";
-    el("emp-submit").textContent = "Save changes";
-    el("emp-cancel").hidden = false;  
+  el("emp-title").textContent = "Edit employee";
+  el("emp-submit").textContent = "Save changes";
+  el("emp-cancel").hidden = false;
 }
 
 
 
 el("emp-cancel").addEventListener("click", function () {
-    resetEmployeeForm();
+  resetEmployeeForm();
 });
 
 function resetEmployeeForm() {
-    el("employee-form").reset();
-    el("employee-id").value = "";
+  el("employee-form").reset();
+  el("employee-id").value = "";
 
-    el("emp-title").textContent = "Add employee";
-    el("emp-submit").textContent = "Add employee";
-    el("emp-cancel").hidden = true;
+  el("emp-title").textContent = "Add employee";
+  el("emp-submit").textContent = "Add employee";
+  el("emp-cancel").hidden = true;
 }
 
 /* ---------------- tabs ---------------- */
@@ -409,3 +443,50 @@ if (location.hash === "#newsletters") {
 function el(id) {
   return document.getElementById(id);
 }
+
+const editor = new EditorJS({
+  holder: "editorjs",
+
+  placeholder: "Start writing your article...",
+
+  tools: {
+    header: {
+      class: Header,
+      inlineToolbar: true,
+      config: {
+        levels: [2, 3, 4],
+        defaultLevel: 2
+      }
+    },
+
+    list: {
+      class: EditorjsList,
+      inlineToolbar: true,
+      config: {
+        defaultStyle: "unordered"
+      }
+    },
+
+    quote: {
+      class: Quote,
+      inlineToolbar: true,
+      config: {
+        quotePlaceholder: "Enter a quote",
+        captionPlaceholder: "Quote author"
+      }
+    },
+
+    image: {
+      class: ImageTool,
+      config: {
+        endpoints: {
+          byFile: "/api/admin/newsletters/image"
+        }
+      }
+    },
+
+    delimiter: {
+      class: Delimiter
+    }
+  }
+});

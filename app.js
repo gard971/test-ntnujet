@@ -13,31 +13,30 @@ const port = process.env.PORT
 const colorReset = "\x1b[0m"
 
 
-
+app.use(express.static(path.join(__dirname + '/public'), { extensions: ["html"] }
+))
 
 
 getPublicIp().then((publicIP) => {
     connectDatabase().then(() => {
         server.listen(port, () => { console.log(`Server reachable on local machine: localhost:${port} or local network: ${getPrivateIp()}:${port} or elsewhere ${publicIP}:${port}`) })
-    app.use(express.static(path.join(__dirname + '/public'), { extensions: ["html"] }
-    ))
-    http.get({
-        hostname: 'ipconfig.io',
-        path: `/port/${port}`
-    }, (res) => {
-        let data = '';
-        res.on('data', chunk => {
-            data += chunk;
+        http.get({
+            hostname: 'ipconfig.io',
+            path: `/port/${port}`
+        }, (res) => {
+            let data = '';
+            res.on('data', chunk => {
+                data += chunk;
+            })
+            res.on('end', () => {
+                data = JSON.parse(data)
+                if (data.reachable) {
+                    console.log(`\x1b[32mPort ${port} checked and found reachable from the outside!${colorReset}`)
+                } else {
+                    console.error(`\x1b[31mPort ${port} not reachable from the outside, please check port-forwarding, and firewall rules${colorReset}`)
+                }
+            })
         })
-        res.on('end', () => {
-            data = JSON.parse(data)
-            if (data.reachable) {
-                console.log(`\x1b[32mPort ${port} checked and found reachable from the outside!${colorReset}`)
-            } else {
-                console.error(`\x1b[31mPort ${port} not reachable from the outside, please check port-forwarding, and firewall rules${colorReset}`)
-            }
-        })
-    })
     })
 })
 
@@ -45,7 +44,7 @@ app.use(express.json());
 app.use(coockieParser());
 app.use("/api", apiRouter);
 
-app.use("/protected", 
+app.use("/protected",
     requireAuth,
     express.static(path.join(__dirname + '/protected'), { extensions: ["html"] })
 )
@@ -98,6 +97,12 @@ async function getPublicIp() {
     });
 }
 
+
+
 module.exports = {
     app
 }
+
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});

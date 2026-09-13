@@ -2,10 +2,10 @@ const express = require("express");
 const apiRouter = express.Router();
 
 const bcrypt = require("bcrypt");
-const { eq } = require("drizzle-orm");
+const { eq, desc } = require("drizzle-orm");
 
 const { db } = require("../db");
-const { employees, admins, openings } = require("../db/schema");
+const { employees, admins, openings, newsletters } = require("../db/schema");
 const { createSession } = require("../auth/sessions");
 const { requireAuth } = require("../middleware/requireAuth");
 const { adminRouter } = require("./admin");
@@ -76,5 +76,47 @@ apiRouter.get("/openings", async (req, res) => {
         openings: result
     });
 });
+apiRouter.get("/newsletters", async (req, res) => {
+    try {
+        const issues = await db
+            .select({
+                id: newsletters.id,
+                title: newsletters.title,
+                publishDate: newsletters.publishDate,
+                author: newsletters.author,
+                description: newsletters.description,
+                imageUrl: newsletters.imageUrl
+            })
+            .from(newsletters)
+            .orderBy(desc(newsletters.publishDate));
+
+        res.json({ issues });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Could not load newsletters"
+        });
+    }
+});
+
+apiRouter.get("/newsletter/:id", async (req, res) => {
+    const URLid = req.params.id
+    console.log(URLid)
+    const result = await db
+    .select()
+    .from(newsletters)
+    .where(eq(newsletters.id, URLid))
+    console.log(result)
+    if(result.length < 1){
+        return res.status(404).json({
+            error:"Newsletter not found"
+        })
+    }
+    res.status(200).json({
+        issue:result
+    })
+})
 
 module.exports = { apiRouter };

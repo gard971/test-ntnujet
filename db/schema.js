@@ -4,7 +4,9 @@ const {
     varchar,
     text,
     boolean,
-    timestamp
+    timestamp,
+    date,
+    jsonb
 } = require("drizzle-orm/pg-core");
 
 const employees = pgTable("employees", {
@@ -40,9 +42,7 @@ const newsletters = pgTable("newsletters", {
 
     title: varchar("title", { length: 255 }).notNull(),
 
-    category: varchar("category", { length: 255 }).notNull(),
-
-    publishDate: timestamp("publish_date").notNull(),
+    publishDate: date("publish_date").notNull(),
 
     author: varchar("author", { length: 255 }).notNull(),
 
@@ -50,7 +50,7 @@ const newsletters = pgTable("newsletters", {
 
     imageUrl: text("image_url"),
 
-    content: text("content").notNull()
+    content: jsonb("content").notNull()
 });
 
 const newsletterDrafts = pgTable("newsletter_drafts", {

@@ -114,17 +114,6 @@
             </label>
             <div class="row">
               <label>
-                Category
-                <select id="news-category">
-                  <option value="propulsion">Propulsion</option>
-                  <option value="structures">Structures</option>
-                  <option value="testing">Testing</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="team">Team</option>
-                  <option value="general">General</option>
-                </select>
-              </label>
-              <label>
                 Publish date
                 <input id="news-date" type="date" />
               </label>
@@ -140,11 +129,10 @@
             </label>
             <label>
               Blog text
-              <textarea id="news-body" rows="12"
-                placeholder="Write the full issue… leave a blank line between paragraphs." required></textarea>
-            </label>
+              </label>
+              <div id="editorjs"></div>
             <div class="actions">
-              <button class="btn primary" type="submit">Save draft</button>
+              <button class="btn primary" type="submit" id="news-save-draft">Save draft</button>
               <button class="btn accent" type="button" id="news-publish">Publish</button>
               <button class="btn ghost" type="button" id="news-cancel" hidden>Cancel edit</button>
             </div>
@@ -483,6 +471,16 @@
   </main>
 
   <div class="toast" id="toast" hidden></div>
+  <!-- Editor.js tools -->
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+
+<!-- Editor.js core -->
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+
   <script src="/protected/admin.js"></script>
 </body>
 

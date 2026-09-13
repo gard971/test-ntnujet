@@ -10,26 +10,53 @@ const path = require("path")
 const fs = require("fs")
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../public/assets/employepics"));
-  },
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "../public/assets/employepics"));
+    },
 
-  filename: (req, file, cb) => {
-    const extension = path.extname(file.originalname);
+    filename: (req, file, cb) => {
+        const extension = path.extname(file.originalname);
 
-    const uniqueName =
-      Date.now() + "-" + Math.round(Math.random() * 1E9);
+        const uniqueName =
+            Date.now() + "-" + Math.round(Math.random() * 1E9);
 
-    cb(null, uniqueName + extension);
-  }
+        cb(null, uniqueName + extension);
+    }
 });
 
 const upload = multer({
-  storage: storage
+    storage: storage
 });
 
+const newsletterUploadPath = path.join(
+    __dirname,
+    "../public/assets/newsletters"
+);
+
+if (!fs.existsSync(newsletterUploadPath)) {
+    fs.mkdirSync(newsletterUploadPath, { recursive: true });
+}
+
+const newsletterStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, newsletterUploadPath);
+    },
+
+    filename: (req, file, cb) => {
+        const extension = path.extname(file.originalname).toLowerCase();
+
+        const uniqueName =
+            Date.now() + "-" + Math.round(Math.random() * 1E9);
+
+        cb(null, uniqueName + extension);
+    }
+});
+
+const newsletterUpload = multer({
+    storage: newsletterStorage
+});
 adminRouter.post("/admin", async (req, res) => {
-    const { username, password, fullName} = req.body;
+    const { username, password, fullName } = req.body;
 
     const result = await db
         .select()
@@ -70,12 +97,14 @@ adminRouter.delete("/admin", async (req, res) => {
     }
     // Delete all sessions associated with the deleted admin
     deleteSessionByUserId(id);
-    
+
     res.status(200).json({
         success: true,
         message: "Admin deleted successfully"
     });
 });
+
+
 
 adminRouter.get("/admin", async (req, res) => {
     const result = await db
@@ -89,7 +118,7 @@ adminRouter.get("/admin", async (req, res) => {
 });
 
 adminRouter.post("/employee", upload.single("image"), async (req, res) => {
-    const { fullname, role, team, email, shortBio, boardMember} = req.body;
+    const { fullname, role, team, email, shortBio, boardMember } = req.body;
 
     const newEmployee = await db.insert(employees).values({
         name: fullname,
@@ -98,7 +127,7 @@ adminRouter.post("/employee", upload.single("image"), async (req, res) => {
         email: email,
         shortBio: shortBio,
         boardMember: boardMember === "true",
-        imageUrl: req.file ? "/assets/employepics/"+req.file.filename : undefined
+        imageUrl: req.file ? "/assets/employepics/" + req.file.filename : undefined
     }).returning();
 
     res.status(201).json({
@@ -130,24 +159,6 @@ adminRouter.delete("/employee", async (req, res) => {
     });
 });
 
-adminRouter.post("/newsletter", async (req, res) => {
-    const { title, category, publishDate, author, description, imageUrl, content } = req.body;
-
-    const newNewsletter = await db.insert(newsletters).values({
-        title,
-        category,
-        publishDate,
-        author,
-        description,
-        imageUrl,
-        content
-    }).returning();
-
-    res.status(201).json({
-        success: true,
-        newsletter: newNewsletter[0]
-    });
-});
 adminRouter.delete("/newsletter", async (req, res) => {
     const { title } = req.body;
     const result = await db
@@ -194,6 +205,23 @@ adminRouter.get("/newsletters", async (req, res) => {
     });
 });
 
+adminRouter.post("/newsletters", async (req, res) => {
+    const { title, description, author, publishDate, content} = req.body
+
+    const result = await db
+    .insert(newsletters).values({
+        title: title,
+        description: description,
+        author: author,
+        publishDate: publishDate,
+        content: content
+    }).returning();
+
+    res.status(201).json({
+        success: true,
+        newsLetter: result
+    })
+})
 
 adminRouter.post("/newsletter/draft", async (req, res) => {
     const { title, category, publishDate, author, description, imageUrl, content } = req.body;
@@ -357,16 +385,26 @@ adminRouter.post("/employeeImage", upload.single("image"), async (req, res) => {
     console.log(req.file.originalname)
     console.log(req.file.filename)
     const test = await db
-    .update(employees)
-    .set({
-        imageUrl: req.file.filename
-    })
-    .where(eq(employees.imageUrl, req.file.originalname))
-    .returning();
+        .update(employees)
+        .set({
+            imageUrl: req.file.filename
+        })
+        .where(eq(employees.imageUrl, req.file.originalname))
+        .returning();
 
     console.log(test)
     res.json({
-        success:true
+        success: true
+    })
+})
+
+adminRouter.post("/newsletters/image", newsletterUpload.single("image"), async (req, res) => {
+
+    res.json({
+        success: 1,
+        file: {
+            url: `/assets/newsletters/${req.file.filename}`
+        }
     })
 })
 
